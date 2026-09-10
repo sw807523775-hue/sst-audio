@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SST 自用答案音频</title>
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1f2329;--sub:#646a73;--brand:#245bdb;--line:#e5e6eb;--hl:#e8f0ff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+.wrap{max-width:720px;margin:0 auto;padding:24px 16px 110px}
+h1{font-size:22px;margin-bottom:6px}
+.sub{color:var(--sub);font-size:14px;margin-bottom:16px;line-height:1.6}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:16px}
+.panel .row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:8px}
+.panel .row:first-child{margin-top:0}
+.lbl{font-size:13px;color:var(--sub)}
+select,input[type=number]{border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:14px;background:#fff;color:var(--ink)}
+input[type=number]{width:64px}
+label.ck{display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer}
+button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 12px;font-size:13px;cursor:pointer;color:var(--ink)}
+button:hover{border-color:var(--brand);color:var(--brand)}
+button.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.item{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.item.playing{border-color:var(--brand);background:var(--hl)}
+.item input[type=checkbox]{width:18px;height:18px;flex:none;cursor:pointer}
+.num{flex:none;width:40px;height:40px;border-radius:10px;background:#e8f0ff;color:var(--brand);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px}
+.tag{flex:none;font-size:11px;padding:3px 8px;border-radius:10px;cursor:pointer;user-select:none}
+.tag.d0{background:#e6f6e9;color:rgb(46,161,33)}
+.tag.d1{background:#fff4e5;color:#d87c1a}
+.tag.d2{background:#fdeceb;color:rgb(216,57,49)}
+.tag.dc{background:#eef2ff;color:#4c6ef5}
+.sdiv{margin:6px 0 2px;font-size:12px;color:var(--brand);font-weight:600}
+.fchip.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.info{flex:1;min-width:0;cursor:pointer}
+.t{font-size:14px;font-weight:600;line-height:1.4}
+.m{color:var(--sub);font-size:12px;margin-top:2px}
+.pbtn{flex:none;width:36px;height:36px;border-radius:50%;font-size:14px;display:flex;align-items:center;justify-content:center;padding:0}
+a.btn{flex:none;text-decoration:none;font-size:12px;padding:7px 10px;border-radius:8px;border:1px solid var(--line);color:var(--ink)}
+a.btn.pri{background:var(--brand);border-color:var(--brand);color:#fff}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 16px;z-index:9}
+.bar .inner{max-width:720px;margin:0 auto}
+.bar .top{display:flex;align-items:center;gap:10px}
+.bar .ct{flex:1;min-width:0}
+.bar .ct .t{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .ct .m{font-size:12px;color:var(--sub)}
+.bar button.big{width:42px;height:42px;border-radius:50%;font-size:16px;padding:0}
+.bar .pg{height:4px;background:var(--line);border-radius:2px;margin-top:8px;cursor:pointer}
+.bar .pg i{display:block;height:100%;background:var(--brand);border-radius:2px;width:0}
+.top{display:flex;align-items:center;gap:8px;margin-bottom:16px;font-size:14px}
+.top a{color:var(--brand);text-decoration:none;cursor:pointer}
+#studyView h1{font-size:20px;line-height:1.4;margin-bottom:4px}
+.meta{color:var(--sub);font-size:13px;margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+.controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.speeds{display:flex;gap:6px}
+.speeds button.on{background:#e8f0ff;border-color:#c3d4f7;color:var(--brand)}
+.sent{padding:10px 12px;border-radius:8px;cursor:pointer;line-height:1.7;font-size:15px;transition:background .15s}
+.sent:hover{background:#f2f3f5}
+.sent.active{background:var(--hl);box-shadow:inset 3px 0 0 var(--brand)}
+.sent .no{color:var(--sub);font-size:12px;margin-right:8px}
+.sent .zh{color:#8f959e;font-size:12px;margin-top:2px;line-height:1.5;display:none}
+body.showzh .sent .zh{display:block}
+.cr{color:rgb(216,57,49)}
+.cg{color:rgb(46,161,33)}
+.cgry{color:rgb(143,149,158)}
+.dl{display:inline-block;color:var(--brand);text-decoration:none;font-size:14px}
+.memocard{display:none}
+.memocard.on{display:block}
+.memo-callout{background:rgb(255,245,235);border:1px solid rgb(255,186,107);border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.8;color:#1f2329}
+.memo-callout .h{display:block;font-weight:700;color:#d87c1a;margin-bottom:6px}
+.memo-callout .k{font-weight:700;color:#d87c1a}
+.memo-img{margin-top:12px}
+.memo-img a{display:block}
+.memo-img img{width:100%;border-radius:10px;border:1px solid var(--line);display:block}
+.tip{color:var(--sub);font-size:12px;margin-top:10px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="listView">
+    <h1>SST 自用答案 · 音频</h1>
+    <p class="sub">勾选要听的题 → ▶ 连播；<b>分组循环</b>每 N 题一组播完自动进入下一组；打开页面后<b>自动预缓存</b>全部已选篇目（后台连播更稳）；「看词」进入逐句点读界面，<b>不会中断连播</b>。手机联网打开一次即可离线使用。</p>
+    <div class="panel">
+      <div class="row">
+        <span class="lbl">已选 <b id="selCount">0</b> 篇</span>
+        <button id="selAll">全选</button>
+        <button id="selNone">清空</button>
+        <button id="playSel">▶ 连播已选</button>
+      </div>
+      <div class="row">
+        <span class="lbl">播放模式</span>
+        <select id="mode">
+          <option value="group">分组循环（每 N 题一组，播完自动下一组）</option>
+          <option value="sequence">顺序播完（一遍结束）</option>
+          <option value="single">单篇循环（当前题反复）</option>
+        </select>
+        <span class="lbl" id="gsWrap">每组 <input type="number" id="groupSize" min="1" max="56" value="10"> 题</span>
+        <span class="lbl" id="grWrap">组内播 <input type="number" id="groupRepeats" min="1" max="99" value="1"> 遍再下一组</span>
+        <label class="ck"><input type="checkbox" id="loopAll" checked>全部播完后再从头循环</label>
+      </div>
+      <div class="row">
+        <span class="lbl">难度筛选</span>
+        <span id="fchips" style="display:contents"></span>
+        <span class="lbl">列表里点标签改难度，长按标签可自定义</span>
+      </div>
+    </div>
+    <div id="collList"></div>
+    <div id="list"><div class="item" data-num="1" data-url="audio/01.%20Biology%2C%20DNA%20%26%20RNA%20%E7%94%9F%E7%89%A9%E4%B8%8EDNA.mp3" data-dur="25.8">
+  <input type="checkbox" data-num="1" checked>
+  <div class="num">01</div>
+  <div class="info"><div class="t">01. Biology, DNA & RNA 生物与DNA</div><div class="m">4 句 · 26 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="1">简单</span>
+</div>
+<div class="item" data-num="2" data-url="audio/02.%20Vitamin%20D%20%E7%BB%B4%E4%BB%96%E5%91%BDD.mp3" data-dur="26.3">
+  <input type="checkbox" data-num="2" checked>
+  <div class="num">02</div>
+  <div class="info"><div class="t">02. Vitamin D 维他命D</div><div class="m">4 句 · 26 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="2">困难</span>
+</div>
+<div class="item" data-num="3" data-url="audio/03.%20Definition%20of%20Globalization%20%E5%85%A8%E7%90%83%E5%8C%96%E7%9A%84%E5%AE%9A%E4%B9%89.mp3" data-dur="27.2">
+  <input type="checkbox" data-num="3" checked>
+  <div class="num">03</div>
+  <div class="info"><div class="t">03. Definition of Globalization 全球化的定义</div><div class="m">4 句 · 27 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="3">简单</span>
+</div>
+<div class="item" data-num="4" data-url="audio/04.%20Einstein%20%E7%88%B1%E5%9B%A0%E6%96%AF%E5%9D%A6.mp3" data-dur="22.5">
+  <input type="checkbox" data-num="4" checked>
+  <div class="num">04</div>
+  <div class="info"><div class="t">04. Einstein 爱因斯坦</div><div class="m">4 句 · 23 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="4">简单</span>
+</div>
+<div class="item" data-num="5" data-url="audio/05.%20The%20Definition%20of%20Risk%20%E5%AE%9A%E4%B9%89%E9%A3%8E%E9%99%A9.mp3" data-dur="25.1">
+  <input type="checkbox" data-num="5" checked>
+  <div class="num">05</div>
+  <div class="info"><div class="t">05. The Definition of Risk 定义风险</div><div class="m">4 句 · 25 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="5">简单</span>
+</div>
+<div class="item" data-num="6" data-url="audio/06.%20Wildlife%20as%20Food%20and%20Income%20%E9%87%8E%E7%94%9F%E5%8A%A8%E7%89%A9%E4%BD%9C%E4%B8%BA%E9%A3%9F%E7%89%A9%E4%B8%8E%E7%BB%8F%E6%B5%8E%E6%9D%A5%E6%BA%90.mp3" data-dur="24.8">
+  <input type="checkbox" data-num="6" checked>
+  <div class="num">06</div>
+  <div class="info"><div class="t">06. Wildlife as Food and Income 野生动物作为食物与经济来源</div><div class="m">4 句 · 25 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="6">简单</span>
+</div>
+<div class="item" data-num="7" data-url="audio/07.%20Big%20Bang%20Theory%20%E5%AE%87%E5%AE%99%E5%A4%A7%E7%88%86%E7%82%B8.mp3" data-dur="22.8">
+  <input type="checkbox" data-num="7" checked>
+  <div class="num">07</div>
+  <div class="info"><div class="t">07. Big Bang Theory 宇宙大爆炸</div><div class="m">4 句 · 23 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="7">简单</span>
+</div>
+<div class="item" data-num="8" data-url="audio/08.%20Obese%20Women%20%E5%A5%B3%E6%80%A7%E4%BD%93%E8%84%82%E5%AE%9E%E9%AA%8C.mp3" data-dur="29.7">
+  <input type="checkbox" data-num="8" checked>
+  <div class="num">08</div>
+  <div class="info"><div class="t">08. Obese Women 女性体脂实验</div><div class="m">5 句 · 30 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="8">简单</span>
+</div>
+<div class="item" data-num="9" data-url="audio/09.%20The%20Decline%20of%20Bees%20%E8%9C%9C%E8%9C%82%E6%95%B0%E9%87%8F%E5%87%8F%E5%B0%91.mp3" data-dur="24.8">
+  <input type="checkbox" data-num="9" checked>
+  <div class="num">09</div>
+  <div class="info"><div class="t">09. The Decline of Bees 蜜蜂数量减少</div><div class="m">4 句 · 25 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="9">困难</span>
+</div>
+<div class="item" data-num="10" data-url="audio/10.%20Smart%20Consumers%20and%20Brand%20%E5%93%81%E7%89%8C%E4%B8%8E%E9%A1%BE%E5%AE%A2%E9%9C%80%E6%B1%82.mp3" data-dur="24.3">
+  <input type="checkbox" data-num="10" checked>
+  <div class="num">10</div>
+  <div class="info"><div class="t">10. Smart Consumers and Brand 品牌与顾客需求</div><div class="m">4 句 · 24 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="10">简单</span>
+</div>
+<div class="item" data-num="11" data-url="audio/11.%20Misuse%20of%20Drugs%20%E7%94%A8%E8%8D%AF%E4%B8%8D%E5%BD%93%E7%9A%84%E5%8D%B1%E5%AE%B3.mp3" data-dur="24.5">
+  <input type="checkbox" data-num="11" checked>
+  <div class="num">11</div>
+  <div class="info"><div class="t">11. Misuse of Drugs 用药不当的危害</div><div class="m">4 句 · 24 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="11">简单</span>
+</div>
+<div class="item" data-num="12" data-url="audio/12.%20Genes%20Affect%20Human%20Behaviors%20%E5%9F%BA%E5%9B%A0%E5%BD%B1%E5%93%8D%E4%BA%BA%E7%B1%BB%E8%A1%8C%E4%B8%BA.mp3" data-dur="27.0">
+  <input type="checkbox" data-num="12" checked>
+  <div class="num">12</div>
+  <div class="info"><div class="t">12. Genes Affect Human Behaviors 基因影响人类行为</div><div class="m">4 句 · 27 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="12">困难</span>
+</div>
+<div class="item" data-num="13" data-url="audio/13.%20Market%20Economy%20%E5%B8%82%E5%9C%BA%E7%BB%8F%E6%B5%8E.mp3" data-dur="24.6">
+  <input type="checkbox" data-num="13" checked>
+  <div class="num">13</div>
+  <div class="info"><div class="t">13. Market Economy 市场经济</div><div class="m">4 句 · 25 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="13">困难</span>
+</div>
+<div class="item" data-num="14" data-url="audio/14.%20Therapeutic%20Environment%20%E6%B2%BB%E7%96%97%E7%8E%AF%E5%A2%83.mp3" data-dur="25.8">
+  <input type="checkbox" data-num="14" checked>
+  <div class="num">14</div>
+  <div class="info"><div class="t">14. Therapeutic Environment 治疗环境</div><div class="m">4 句 · 26 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="14">困难</span>
+</div>
+<div class="item" data-num="15" data-url="audio/15.%20Babies%20Just%20Want%20to%20Be%20Smiled%20at%20%E5%A9%B4%E5%84%BF%E5%96%9C%E6%AC%A2%E7%AC%91%E5%AE%B9.mp3" data-dur="25.4">
+  <input type="checkbox" data-num="15" checked>
+  <div class="num">15</div>
+  <div class="info"><div class="t">15. Babies Just Want to Be Smiled at 婴儿喜欢笑容</div><div class="m">4 句 · 25 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="15">简单</span>
+</div>
+<div class="item" data-num="16" data-url="audio/16.%20Newspaper%20Industry%20%E6%96%B0%E9%97%BB%E4%B8%9A%E4%B8%8B%E6%BB%91.mp3" data-dur="25.1">
+  <input type="checkbox" data-num="16" checked>
+  <div class="num">16</div>
+  <div class="info"><div class="t">16. Newspaper Industry 新闻业下滑</div><div class="m">4 句 · 25 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="16">困难</span>
+</div>
+<div class="item" data-num="17" data-url="audio/17.%20Automated%20Vehicles%20%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B1%BD%E8%BD%A6.mp3" data-dur="26.2">
+  <input type="checkbox" data-num="17" checked>
+  <div class="num">17</div>
+  <div class="info"><div class="t">17. Automated Vehicles 自动化汽车</div><div class="m">4 句 · 26 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="17">困难</span>
+</div>
+<div class="item" data-num="18" data-url="audio/18.%20Chimpanzees%20%E6%8B%AF%E6%95%91%E5%A4%A7%E7%8C%A9%E7%8C%A9.mp3" data-dur="26.9">
+  <input type="checkbox" data-num="18" checked>
+  <div class="num">18</div>
+  <div class="info"><div class="t">18. Chimpanzees 拯救大猩猩</div><div class="m">4 句 · 27 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="18">困难</span>
+</div>
+<div class="item" data-num="19" data-url="audio/19.%20The%20Separation%20of%20Powers%20%E4%B8%89%E6%9D%83%E5%88%86%E7%AB%8B.mp3" data-dur="24.0">
+  <input type="checkbox" data-num="19" checked>
+  <div class="num">19</div>
+  <div class="info"><div class="t">19. The Separation of Powers 三权分立</div><div class="m">4 句 · 24 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="19">困难</span>
+</div>
+<div class="item" data-num="20" data-url="audio/20.%20Fight-or-flight%20Response%20%E8%BF%8E%E6%88%98%E6%88%96%E9%80%83%E8%B7%91%E5%8F%8D%E5%BA%94.mp3" data-dur="25.2">
+  <input type="checkbox" data-num="20" checked>
+  <div class="num">20</div>
+  <div class="info"><div class="t">20. Fight-or-flight Response 迎战或逃跑反应</div><div class="m">4 句 · 25 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="20">困难</span>
+</div>
+<div class="item" data-num="21" data-url="audio/21.%20Need%20%E9%9C%80%E8%A6%81%E5%92%8C%E9%9C%80%E6%B1%82.mp3" data-dur="22.9">
+  <input type="checkbox" data-num="21" checked>
+  <div class="num">21</div>
+  <div class="info"><div class="t">21. Need 需要和需求</div><div class="m">4 句 · 23 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="21">简单</span>
+</div>
+<div class="item" data-num="22" data-url="audio/22.%20Globalization%20%26%20Detraditionalization%20%E5%85%A8%E7%90%83%E5%8C%96%E5%AF%BC%E8%87%B4%E4%BC%A0%E7%BB%9F%E6%96%87%E5%8C%96%E4%B8%A7%E5%A4%B1.mp3" data-dur="24.4">
+  <input type="checkbox" data-num="22" checked>
+  <div class="num">22</div>
+  <div class="info"><div class="t">22. Globalization & Detraditionalization 全球化导致传统文化丧失</div><div class="m">4 句 · 24 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="22">简单</span>
+</div>
+<div class="item" data-num="23" data-url="audio/23.%20What%20happened%20to%20Journalism%20%E7%BD%91%E7%BB%9C%E5%BD%B1%E5%93%8D%E4%BC%A0%E5%AA%92.mp3" data-dur="23.1">
+  <input type="checkbox" data-num="23" checked>
+  <div class="num">23</div>
+  <div class="info"><div class="t">23. What happened to Journalism 网络影响传媒</div><div class="m">4 句 · 23 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="23">简单</span>
+</div>
+<div class="item" data-num="24" data-url="audio/24.%20Cultural%20Diversity%20in%20Australia%20%E6%BE%B3%E5%A4%A7%E5%88%A9%E4%BA%9A%E5%A4%9A%E5%85%83%E6%96%87%E5%8C%96.mp3" data-dur="27.9">
+  <input type="checkbox" data-num="24" checked>
+  <div class="num">24</div>
+  <div class="info"><div class="t">24. Cultural Diversity in Australia 澳大利亚多元文化</div><div class="m">4 句 · 28 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="24">简单</span>
+</div>
+<div class="item" data-num="25" data-url="audio/25.%20Manager%20%E7%BB%8F%E7%90%86%E5%BA%94%E8%AF%A5%E8%87%AA%E6%88%91%E6%8F%90%E5%8D%87.mp3" data-dur="25.8">
+  <input type="checkbox" data-num="25" checked>
+  <div class="num">25</div>
+  <div class="info"><div class="t">25. Manager 经理应该自我提升</div><div class="m">4 句 · 26 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="25">困难</span>
+</div>
+<div class="item" data-num="26" data-url="audio/26.%20Credit%20Card%20Experiment%20%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9E%E9%AA%8C.mp3" data-dur="22.6">
+  <input type="checkbox" data-num="26" checked>
+  <div class="num">26</div>
+  <div class="info"><div class="t">26. Credit Card Experiment 信用卡实验</div><div class="m">4 句 · 23 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="26">困难</span>
+</div>
+<div class="item" data-num="27" data-url="audio/27.%20The%20History%20of%20Software%20%E8%BD%AF%E4%BB%B6%E5%8F%91%E5%B1%95%E5%8F%B2.mp3" data-dur="24.0">
+  <input type="checkbox" data-num="27" checked>
+  <div class="num">27</div>
+  <div class="info"><div class="t">27. The History of Software 软件发展史</div><div class="m">4 句 · 24 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="27">困难</span>
+</div>
+<div class="item" data-num="28" data-url="audio/28.%20Canned%20Food%20during%20the%20Great%20Depression%20%E5%A4%A7%E8%90%A7%E6%9D%A1%E6%97%B6%E6%9C%9F%E7%9A%84%E7%BD%90%E8%A3%85%E9%A3%9F%E5%93%81.mp3" data-dur="26.7">
+  <input type="checkbox" data-num="28" checked>
+  <div class="num">28</div>
+  <div class="info"><div class="t">28. Canned Food during the Great Depression 大萧条时期的罐装食品</div><div class="m">4 句 · 27 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="28">简单</span>
+</div>
+<div class="item" data-num="29" data-url="audio/29.%20Roman%20City%20Planning%20%E7%BD%97%E9%A9%AC%E5%9F%8E%E5%B8%82%E8%A7%84%E5%88%92.mp3" data-dur="25.9">
+  <input type="checkbox" data-num="29" checked>
+  <div class="num">29</div>
+  <div class="info"><div class="t">29. Roman City Planning 罗马城市规划</div><div class="m">4 句 · 26 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="29">困难</span>
+</div>
+<div class="item" data-num="30" data-url="audio/30.%20Synthetic%20Biology%20%26%20Genetic%20Engineering%20%E5%90%88%E6%88%90%E7%94%9F%E7%89%A9%E5%AD%A6%E4%B8%8E%E5%9F%BA%E5%9B%A0%E5%B7%A5%E7%A8%8B.mp3" data-dur="25.2">
+  <input type="checkbox" data-num="30" checked>
+  <div class="num">30</div>
+  <div class="info"><div class="t">30. Synthetic Biology & Genetic Engineering 合成生物学与基因工程</div><div class="m">4 句 · 25 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="30">困难</span>
+</div>
+<div class="item" data-num="31" data-url="audio/31.%20Online%20Research%20%E7%BA%BF%E4%B8%8A%E8%B0%83%E7%A0%94.mp3" data-dur="25.9">
+  <input type="checkbox" data-num="31" checked>
+  <div class="num">31</div>
+  <div class="info"><div class="t">31. Online Research 线上调研</div><div class="m">5 句 · 26 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="31">简单</span>
+</div>
+<div class="item" data-num="32" data-url="audio/32.%20The%20History%20of%20English%20%E8%8B%B1%E8%AF%AD%E8%AF%AD%E8%A8%80%E5%8F%91%E5%B1%95%E5%8F%B2.mp3" data-dur="27.1">
+  <input type="checkbox" data-num="32" checked>
+  <div class="num">32</div>
+  <div class="info"><div class="t">32. The History of English 英语语言发展史</div><div class="m">5 句 · 27 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="32">简单</span>
+</div>
+<div class="item" data-num="33" data-url="audio/33.%20Food%20Crisis%20%E7%B2%AE%E9%A3%9F%E5%8D%B1%E6%9C%BA.mp3" data-dur="25.4">
+  <input type="checkbox" data-num="33" checked>
+  <div class="num">33</div>
+  <div class="info"><div class="t">33. Food Crisis 粮食危机</div><div class="m">4 句 · 25 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="33">简单</span>
+</div>
+<div class="item" data-num="34" data-url="audio/34.%20Great%20Ideas%20%E5%A5%BD%E6%83%B3%E6%B3%95.mp3" data-dur="21.9">
+  <input type="checkbox" data-num="34" checked>
+  <div class="num">34</div>
+  <div class="info"><div class="t">34. Great Ideas 好想法</div><div class="m">4 句 · 22 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="34">困难</span>
+</div>
+<div class="item" data-num="35" data-url="audio/35.%20Demolition%20of%20Buildings%20%E6%8B%86%E9%99%A4%E5%BB%BA%E7%AD%91.mp3" data-dur="24.9">
+  <input type="checkbox" data-num="35" checked>
+  <div class="num">35</div>
+  <div class="info"><div class="t">35. Demolition of Buildings 拆除建筑</div><div class="m">4 句 · 25 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="35">困难</span>
+</div>
+<div class="item" data-num="36" data-url="audio/36.%20Negativity%20Bias%20%E6%B6%88%E6%9E%81%E5%81%8F%E5%B7%AE.mp3" data-dur="28.2">
+  <input type="checkbox" data-num="36" checked>
+  <div class="num">36</div>
+  <div class="info"><div class="t">36. Negativity Bias 消极偏差</div><div class="m">4 句 · 28 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="36">困难</span>
+</div>
+<div class="item" data-num="37" data-url="audio/37.%20Water%20Recycling%20%E6%B0%B4%E7%9A%84%E5%BE%AA%E7%8E%AF%E5%88%A9%E7%94%A8.mp3" data-dur="23.3">
+  <input type="checkbox" data-num="37" checked>
+  <div class="num">37</div>
+  <div class="info"><div class="t">37. Water Recycling 水的循环利用</div><div class="m">4 句 · 23 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="37">困难</span>
+</div>
+<div class="item" data-num="38" data-url="audio/38.%20Misunderstanding%20of%20Globalization%20%E5%AF%B9%E5%85%A8%E7%90%83%E5%8C%96%E7%9A%84%E8%AF%AF%E8%A7%A3.mp3" data-dur="25.1">
+  <input type="checkbox" data-num="38" checked>
+  <div class="num">38</div>
+  <div class="info"><div class="t">38. Misunderstanding of Globalization 对全球化的误解</div><div class="m">4 句 · 25 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="38">简单</span>
+</div>
+<div class="item" data-num="39" data-url="audio/39.%20Inequality%20in%20Children%20%E5%84%BF%E7%AB%A5%E6%88%90%E9%95%BF%E7%9A%84%E4%B8%8D%E5%B9%B3%E7%AD%89.mp3" data-dur="26.3">
+  <input type="checkbox" data-num="39" checked>
+  <div class="num">39</div>
+  <div class="info"><div class="t">39. Inequality in Children 儿童成长的不平等</div><div class="m">4 句 · 26 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="39">困难</span>
+</div>
+<div class="item" data-num="40" data-url="audio/40.%20The%20Industrial%20Revolution%20%E5%B7%A5%E4%B8%9A%E9%9D%A9%E5%91%BD.mp3" data-dur="26.0">
+  <input type="checkbox" data-num="40" checked>
+  <div class="num">40</div>
+  <div class="info"><div class="t">40. The Industrial Revolution 工业革命</div><div class="m">4 句 · 26 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="40">困难</span>
+</div>
+<div class="item" data-num="41" data-url="audio/41.%20Organization%20Studies%20%E7%BB%84%E7%BB%87%E7%A0%94%E7%A9%B6.mp3" data-dur="27.4">
+  <input type="checkbox" data-num="41" checked>
+  <div class="num">41</div>
+  <div class="info"><div class="t">41. Organization Studies 组织研究</div><div class="m">4 句 · 27 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="41">困难</span>
+</div>
+<div class="item" data-num="42" data-url="audio/42.%20Australian%20Immigration%20%E6%BE%B3%E5%A4%A7%E5%88%A9%E4%BA%9A%E7%A7%BB%E6%B0%91.mp3" data-dur="34.4">
+  <input type="checkbox" data-num="42" checked>
+  <div class="num">42</div>
+  <div class="info"><div class="t">42. Australian Immigration 澳大利亚移民</div><div class="m">5 句 · 34 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="42">困难</span>
+</div>
+<div class="item" data-num="43" data-url="audio/43.%20Stock%20Market%20and%20Modern%20Business%20%E8%82%A1%E7%A5%A8%E5%B8%82%E5%9C%BA%E4%B8%8E%E7%8E%B0%E4%BB%A3%E4%BC%81%E4%B8%9A.mp3" data-dur="25.5">
+  <input type="checkbox" data-num="43" checked>
+  <div class="num">43</div>
+  <div class="info"><div class="t">43. Stock Market and Modern Business 股票市场与现代企业</div><div class="m">4 句 · 26 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="43">简单</span>
+</div>
+<div class="item" data-num="44" data-url="audio/44.%20A%20Luxury%20Brand%20%E5%A5%A2%E4%BE%88%E5%93%81.mp3" data-dur="23.9">
+  <input type="checkbox" data-num="44" checked>
+  <div class="num">44</div>
+  <div class="info"><div class="t">44. A Luxury Brand 奢侈品</div><div class="m">5 句 · 24 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="44">简单</span>
+</div>
+<div class="item" data-num="45" data-url="audio/45.%20The%20Stability%20of%20Mood%20%E6%83%85%E7%BB%AA%E7%A8%B3%E5%AE%9A.mp3" data-dur="23.8">
+  <input type="checkbox" data-num="45" checked>
+  <div class="num">45</div>
+  <div class="info"><div class="t">45. The Stability of Mood 情绪稳定</div><div class="m">5 句 · 24 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d1" data-num="45">中等</span>
+</div>
+<div class="item" data-num="46" data-url="audio/46.%20Women%20Leadership%20%E9%A2%86%E5%AF%BC%E5%8A%9B.mp3" data-dur="22.6">
+  <input type="checkbox" data-num="46" checked>
+  <div class="num">46</div>
+  <div class="info"><div class="t">46. Women Leadership 领导力</div><div class="m">4 句 · 23 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="46">简单</span>
+</div>
+<div class="item" data-num="47" data-url="audio/47.%20Social%20Difficulties%20in%20Children%20%E5%84%BF%E7%AB%A5%E7%9A%84%E7%A4%BE%E4%BA%A4%E5%9B%B0%E9%9A%BE.mp3" data-dur="25.4">
+  <input type="checkbox" data-num="47" checked>
+  <div class="num">47</div>
+  <div class="info"><div class="t">47. Social Difficulties in Children 儿童的社交困难</div><div class="m">4 句 · 25 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="47">简单</span>
+</div>
+<div class="item" data-num="48" data-url="audio/48.%20English%20Language%20in%20Poem%20%E8%AF%97%E6%AD%8C%E8%AF%AD%E8%A8%80.mp3" data-dur="22.6">
+  <input type="checkbox" data-num="48" checked>
+  <div class="num">48</div>
+  <div class="info"><div class="t">48. English Language in Poem 诗歌语言</div><div class="m">4 句 · 23 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="48">简单</span>
+</div>
+<div class="item" data-num="49" data-url="audio/49.%20Paper%20Rejection%20%E8%AE%BA%E6%96%87%E9%81%AD%E6%8B%92.mp3" data-dur="22.6">
+  <input type="checkbox" data-num="49" checked>
+  <div class="num">49</div>
+  <div class="info"><div class="t">49. Paper Rejection 论文遭拒</div><div class="m">4 句 · 23 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="49">简单</span>
+</div>
+<div class="item" data-num="50" data-url="audio/50.%20Bees%E2%80%99%20Genes%20and%20Darwin%20%E8%9C%9C%E8%9C%82%E5%9F%BA%E5%9B%A0%E4%B8%8E%E8%BE%BE%E5%B0%94%E6%96%87.mp3" data-dur="22.3">
+  <input type="checkbox" data-num="50" checked>
+  <div class="num">50</div>
+  <div class="info"><div class="t">50. Bees’ Genes and Darwin 蜜蜂基因与达尔文</div><div class="m">4 句 · 22 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="50">困难</span>
+</div>
+<div class="item" data-num="51" data-url="audio/51.%20Machines%20Increase%20Unemployment%20%E6%9C%BA%E5%99%A8%E5%A2%9E%E5%8A%A0%E5%A4%B1%E4%B8%9A%E7%8E%87.mp3" data-dur="27.2">
+  <input type="checkbox" data-num="51" checked>
+  <div class="num">51</div>
+  <div class="info"><div class="t">51. Machines Increase Unemployment 机器增加失业率</div><div class="m">4 句 · 27 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="51">简单</span>
+</div>
+<div class="item" data-num="52" data-url="audio/52.%20Symmetry%20in%20Mathematics%20%E6%95%B0%E5%AD%A6%E4%B8%AD%E7%9A%84%E5%AF%B9%E7%A7%B0%E6%80%A7.mp3" data-dur="26.1">
+  <input type="checkbox" data-num="52" checked>
+  <div class="num">52</div>
+  <div class="info"><div class="t">52. Symmetry in Mathematics 数学中的对称性</div><div class="m">4 句 · 26 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d2" data-num="52">困难</span>
+</div>
+<div class="item" data-num="53" data-url="audio/53.%20Hook%20%E8%AE%AE%E8%AE%BA%E6%96%87%E5%BC%80%E7%AF%87.mp3" data-dur="26.0">
+  <input type="checkbox" data-num="53" checked>
+  <div class="num">53</div>
+  <div class="info"><div class="t">53. Hook 议论文开篇</div><div class="m">4 句 · 26 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="53">简单</span>
+</div>
+<div class="item" data-num="54" data-url="audio/54.%20Product-focused%20Market%20%E5%8D%96%E6%96%B9%E5%B8%82%E5%9C%BA%E5%92%8C%E4%B9%B0%E6%96%B9%E5%B8%82%E5%9C%BA.mp3" data-dur="24.0">
+  <input type="checkbox" data-num="54" checked>
+  <div class="num">54</div>
+  <div class="info"><div class="t">54. Product-focused Market 卖方市场和买方市场</div><div class="m">4 句 · 24 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="54">简单</span>
+</div>
+<div class="item" data-num="55" data-url="audio/55.%20Modern%20Poetry%20%E7%8E%B0%E4%BB%A3%E8%AF%97%E6%AD%8C.mp3" data-dur="22.8">
+  <input type="checkbox" data-num="55" checked>
+  <div class="num">55</div>
+  <div class="info"><div class="t">55. Modern Poetry 现代诗歌</div><div class="m">4 句 · 23 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="55">简单</span>
+</div>
+<div class="item" data-num="56" data-url="audio/56.%20Melatonin%20%E8%A4%AA%E9%BB%91%E7%B4%A0.mp3" data-dur="25.5">
+  <input type="checkbox" data-num="56" checked>
+  <div class="num">56</div>
+  <div class="info"><div class="t">56. Melatonin 褪黑素</div><div class="m">5 句 · 26 秒</div></div>
+  <button class="pbtn" title="连播播放">▶</button>
+  <button class="studyBtn2" title="看词点读">📄</button>
+  <span class="tag d0" data-num="56">简单</span>
+</div></div>
+  </div>
+
+  <div id="studyView" style="display:none">
+    <div class="top"><a id="backList">← 目录</a></div>
+    <h1 id="stTitle">—</h1>
+    <div class="meta"><span id="stMeta"></span></div>
+    <div class="card">
+      <div class="controls">
+        <span class="lbl">循环方式</span>
+        <select id="stMode">
+          <option value="group">分组循环（连播队列循环）</option>
+          <option value="sequence">顺序播完</option>
+          <option value="single">单篇循环（本篇反复）</option>
+        </select>
+        <button id="loopBtn">🔁 本篇反复：关</button>
+        <div class="speeds" id="speeds">
+          <button data-s="0.75">0.75x</button>
+          <button data-s="1" class="on">1x</button>
+          <button data-s="1.25">1.25x</button>
+        </div>
+        <span class="tag" id="stTag" data-num="0" style="cursor:pointer" title="点击切换难度，长按自定义">—</span>
+        <button id="zhBtn" title="显示/隐藏逐句中文">译</button>
+        <button id="memoBtn" title="记忆联想图 + 中文速记">🧠 记忆卡</button>
+      </div>
+    </div>
+    <div class="card memocard" id="memoCard"></div>
+    <div class="card" id="sentList"></div>
+    <p class="tip">点击任意句子跳转到对应位置；播放时当前句高亮跟随。<b>译</b> 显示逐句中文（默认隐藏），<b>🧠 记忆卡</b> 查看中文速记与联想图。切歌、连播、循环都在底部播放条进行，本界面不会打断播放。</p>
+  </div>
+</div>
+
+<div class="bar" id="bar" style="display:none">
+  <div class="inner">
+    <div class="top">
+      <button class="big" id="prevBtn">⏮</button>
+      <button class="big" id="ppBtn">▶</button>
+      <button class="big" id="nextBtn">⏭</button>
+      <div class="ct"><div class="t" id="curTitle">—</div><div class="m" id="curMeta"></div></div>
+      <button id="modeBtn" title="切换播放模式">🔁</button>
+      <button id="studyBtn" title="看词界面">📄</button>
+    </div>
+    <div class="pg" id="pg"><i id="pgFill"></i></div>
+  </div>
+</div>
+
+<script>
+const ALL = [{"num": 1, "title": "01. Biology, DNA & RNA 生物与DNA", "url": "audio/01.%20Biology%2C%20DNA%20%26%20RNA%20%E7%94%9F%E7%89%A9%E4%B8%8EDNA.mp3", "dur": 25.8, "sentences": [{"i": 0, "sentence": "The lecture says that biology provides profound insights into the world.", "start": 0.1, "end": 4.7}, {"i": 1, "sentence": "The speaker first provides information on all creatures being similar and related to each other.", "start": 4.65, "end": 10.125}, {"i": 2, "sentence": "Furthermore, he mentions they depend on DNA and RNA to store and transmit their genetic and inherited information, and are based on cells, which are the fundamental building blocks.", "start": 10.125, "end": 20.875}, {"i": 3, "sentence": "In conclusion, they conduct metabolism and have similar basic chemistry.", "start": 20.875, "end": 25.75}], "translations": ["讲座指出，生物学为认识世界提供了深刻洞见。", "讲者首先谈到，所有生物彼此相似且相互关联。", "此外，他提到它们依靠 DNA 与 RNA 储存和传递遗传信息，并以细胞为基本构件。", "总之，它们进行新陈代谢，且基础化学构成相似。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture says that </span><span class=\"cr\">biology</span> provides <span class=\"cg\">profound insights into the world</span>.\n", "<span class=\"cgry\">The speaker first provides information on </span><span class=\"cg\">all creatures</span> being <span class=\"cg\">similar</span> and <span class=\"cg\">related</span> to each other.\n", "<span class=\"cgry\">Furthermore, he mentions </span>they depend on <span class=\"cg\">DNA</span> and <span class=\"cg\">RNA</span> to store and transmit <span class=\"cg\">their genetic and inherited information</span>, and are based on <span class=\"cg\">cells</span>, which are <span class=\"cg\">the fundamental building blocks</span>.\n", "<span class=\"cgry\">In conclusion, </span>they conduct <span class=\"cg\">metabolism</span> and have <span class=\"cg\">similar basic chemistry</span>."], "memo": "【生物学】揭示共同规律 → 【同源】生物相似且相互关联 → 【遗传】依赖DNA/RNA传信息、细胞为基本构件 → 【共性】新陈代谢、化学基础相近", "memoImg": "memo/01.webp", "memoImgS": "memo/s/01.webp"}, {"num": 2, "title": "02. Vitamin D 维他命D", "url": "audio/02.%20Vitamin%20D%20%E7%BB%B4%E4%BB%96%E5%91%BDD.mp3", "dur": 26.3, "sentences": [{"i": 0, "sentence": "The lecture says that Vitamin D is called the sunshine vitamin.", "start": 0.1, "end": 4.162}, {"i": 1, "sentence": "The speaker first provides information on Vitamin D as a prohormone, with no dietary need when exposed to adequate sunshine.", "start": 4.112, "end": 12.062}, {"i": 2, "sentence": "Furthermore, he mentions that people living in tropical climates with sufficient skin exposure to sunlight had no dietary need.", "start": 12.062, "end": 19.613}, {"i": 3, "sentence": "In conclusion, migration away from equatorial regions created a dietary need, especially in winter.", "start": 19.613, "end": 26.275}], "translations": ["讲座指出，维生素 D 被称为“阳光维生素”。", "讲者首先谈到，维生素 D 是一种激素原，只要日照充足就无需从饮食中获取。", "此外，他提到生活在热带气候、皮肤充分接受阳光照射的人并无饮食摄入的需要。", "总之，迁离赤道地区造成了饮食需求，在冬季尤其如此。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture says that </span><span class=\"cr\">Vitamin D</span> is called <span class=\"cr\">the sunshine vitamin</span>.\n", "<span class=\"cgry\">The speaker first provides information on </span>Vitamin D as <span class=\"cg\">a prohormone</span>, with <span class=\"cg\">no dietary need</span> when exposed to <span class=\"cg\">adequate sunshine</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>that people living in <span class=\"cg\">tropical climates</span> with <span class=\"cg\">sufficient skin exposure to sunlight</span> had no dietary need.\n", "<span class=\"cgry\">In conclusion, </span><span class=\"cg\">migration away from equatorial regions</span> created <span class=\"cg\">a dietary need</span>, especially in <span class=\"cg\">winter</span>."], "memo": "【维他命D】阳光维生素、激素原 → 【阳光充足】无需饮食补充 → 【热带时期】日照足亦然 → 【迁离赤道】产生饮食需求、冬季尤甚", "memoImg": "memo/02.webp", "memoImgS": "memo/s/02.webp"}, {"num": 3, "title": "03. Definition of Globalization 全球化的定义", "url": "audio/03.%20Definition%20of%20Globalization%20%E5%85%A8%E7%90%83%E5%8C%96%E7%9A%84%E5%AE%9A%E4%B9%89.mp3", "dur": 27.2, "sentences": [{"i": 0, "sentence": "The lecture says that the definition of globalization is the proliferation of international trade and more international communications.", "start": 0.1, "end": 7.375}, {"i": 1, "sentence": "Firstly, multinationals can be good examples, and globalization is an integrated economic system.", "start": 7.325, "end": 14.05}, {"i": 2, "sentence": "Furthermore, he mentions this system splits the world into consuming countries and producing countries.", "start": 14.05, "end": 20.188}, {"i": 3, "sentence": "In conclusion, this is a new era where economies depend on each other, so the post-industrial economy is global.", "start": 20.188, "end": 27.25}], "translations": ["讲座指出，全球化的定义是国际贸易的激增以及更频繁的国际交流。", "首先，跨国公司是很好的例证，全球化是一个一体化的经济体系。", "此外，他提到这一体系把世界分为消费国和生产国。", "总之，这是一个各经济体相互依存的新时代，因此后工业经济是全球性的。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture says that </span><span class=\"cr\">the definition of globalization</span> is <span class=\"cr\">the proliferation of international trade</span> and <span class=\"cr\">more international communications</span>.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cg\">multinationals</span> can be good examples, and globalization is <span class=\"cg\">an integrated economic system</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>this system splits the world into <span class=\"cg\">consuming countries</span> and <span class=\"cg\">producing countries</span>.\n", "<span class=\"cgry\">In conclusion, </span>this is <span class=\"cg\">a new era</span> where economies <span class=\"cg\">depend on each other</span>, so <span class=\"cg\">the post-industrial economy</span> is global."], "memo": "【全球化】国际贸易激增、国际交流增多 → 【公司角度】跨国公司为例 → 【国家角度】综合经济体系、消费国+生产国 → 【经济依赖】经济互相依赖、后工业经济全球化", "memoImg": "memo/03.webp", "memoImgS": "memo/s/03.webp"}, {"num": 4, "title": "04. Einstein 爱因斯坦", "url": "audio/04.%20Einstein%20%E7%88%B1%E5%9B%A0%E6%96%AF%E5%9D%A6.mp3", "dur": 22.5, "sentences": [{"i": 0, "sentence": "The lecture is about the universe.", "start": 0.1, "end": 2.612}, {"i": 1, "sentence": "Firstly, astronomers imagined that the universe was like a floor, fixed and unchangeable.", "start": 2.562, "end": 8.438}, {"i": 2, "sentence": "Furthermore, he mentions Einstein’s work in the 20th century suggested space is in continuous dynamic change, but this was just a prediction.", "start": 8.438, "end": 16.95}, {"i": 3, "sentence": "In conclusion, it was Edwin Hubble who made the discovery that the universe is really like that.", "start": 16.95, "end": 22.512}], "translations": ["讲座是关于宇宙的。", "首先，天文学家曾认为宇宙像一层地板，固定不变。", "此外，他提到爱因斯坦在 20 世纪的研究表明空间处于持续动态变化之中，但这只是预测。", "总之，是埃德温·哈勃发现宇宙确实如此。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">the universe</span>.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cg\">astronomers</span> imagined that <span class=\"cr\">the universe</span> was like <span class=\"cg\">a floor</span>, <span class=\"cg\">fixed and unchangeable</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cr\">Einstein’s work</span> in <span class=\"cg\">the 20th century</span> suggested <span class=\"cg\">space</span> is in <span class=\"cg\">continuous dynamic change</span>, but this was just <span class=\"cg\">a prediction</span>.\n", "<span class=\"cgry\">In conclusion, </span>it was <span class=\"cr\">Edwin Hubble</span> who <span class=\"cg\">made the discovery</span> that the universe is really like that."], "memo": "【旧宇宙观】宇宙像地面、固定不变 → 【转变】爱因斯坦提出太空持续动态变化 → 【局限】仅是预测 → 【证实】哈勃发现、证实宇宙如此", "memoImg": "memo/04.webp", "memoImgS": "memo/s/04.webp"}, {"num": 5, "title": "05. The Definition of Risk 定义风险", "url": "audio/05.%20The%20Definition%20of%20Risk%20%E5%AE%9A%E4%B9%89%E9%A3%8E%E9%99%A9.mp3", "dur": 25.1, "sentences": [{"i": 0, "sentence": "The lecture is about risk analysis, focusing on the definition of risk and safety.", "start": 0.1, "end": 5.463}, {"i": 1, "sentence": "The speaker first provides information on two literal definitions of risk in dictionaries.", "start": 5.412, "end": 10.988}, {"i": 2, "sentence": "Furthermore, he mentions one means the possibility of loss or injury, and the other means the consequences of some kinds of danger.", "start": 10.988, "end": 18.962}, {"i": 3, "sentence": "In conclusion, safety means being free from harm, and a simple notion of being safe or not.", "start": 18.962, "end": 25.137}], "translations": ["讲座是关于风险分析的，聚焦风险与安全的定义。", "讲者首先谈到词典中风险的两个字面定义。", "此外，他提到一个指损失或伤害的可能性，另一个指某种危险带来的后果。", "总之，安全意味着免受伤害，是一种“安全与否”的简单概念。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">risk analysis</span>, focusing on <span class=\"cr\">the definition of risk and safety</span>.\n", "<span class=\"cgry\">The speaker first provides information on </span><span class=\"cg\">two literal definitions</span> of risk in <span class=\"cg\">dictionaries</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>one means <span class=\"cg\">the possibility of loss or injury</span>, and the other means <span class=\"cg\">the consequences of some kinds of danger</span>.\n", "<span class=\"cgry\">In conclusion, </span>safety means <span class=\"cg\">being free from harm</span>, and a simple notion of being safe or not."], "memo": "【风险分析】风险与安全的定义 → 【风险定义】词典两种字面定义、损失受伤可能性+危险后果 → 【安全定义】免受伤害的简单概念", "memoImg": "memo/05.webp", "memoImgS": "memo/s/05.webp"}, {"num": 6, "title": "06. Wildlife as Food and Income 野生动物作为食物与经济来源", "url": "audio/06.%20Wildlife%20as%20Food%20and%20Income%20%E9%87%8E%E7%94%9F%E5%8A%A8%E7%89%A9%E4%BD%9C%E4%B8%BA%E9%A3%9F%E7%89%A9%E4%B8%8E%E7%BB%8F%E6%B5%8E%E6%9D%A5%E6%BA%90.mp3", "dur": 24.8, "sentences": [{"i": 0, "sentence": "The lecture is about wildlife.", "start": 0.1, "end": 2.688}, {"i": 1, "sentence": "Firstly, wildlife has an important role in livelihood, especially in East and West Africa, and humans depend on wildlife as a source of food and income.", "start": 2.638, "end": 12.125}, {"i": 2, "sentence": "Furthermore, he mentions fish is animal protein for people in poverty, and the management of fish resources for health.", "start": 12.125, "end": 19.363}, {"i": 3, "sentence": "In conclusion, wildlife tourism can be a top income source in many countries.", "start": 19.363, "end": 24.837}], "translations": ["讲座是关于野生动物的。", "首先，野生动物在生计中扮演重要角色，尤其在东非和西非，人们依赖野生动物作为食物和收入来源。", "此外，他提到鱼类是贫困人口的动物蛋白来源，以及鱼类资源管理对健康的意义。", "总之，野生动物旅游可以成为许多国家的首要收入来源。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">wildlife</span>.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cr\">wildlife</span> has <span class=\"cg\">an important role</span> in <span class=\"cr\">livelihood</span>, especially in East and West Africa, and <span class=\"cg\">humans</span> depend on wildlife as <span class=\"cr\">a source of food and income</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cg\">fish</span> is <span class=\"cg\">animal protein</span> for <span class=\"cg\">people in poverty</span>, and <span class=\"cg\">the management of fish resources</span> for <span class=\"cg\">health</span>.\n", "<span class=\"cgry\">In conclusion, </span><span class=\"cg\">wildlife tourism</span> can be a top income source in many countries."], "memo": "【野生动物与生计】东非西非作用突出 → 【人类依赖】食物和收入来源 → 【鱼类蛋白】贫困人口主要动物蛋白 → 【资源管理】鱼类资源管理关乎健康 → 【旅游收入】许多国家主要收入来源", "memoImg": "memo/06.webp", "memoImgS": "memo/s/06.webp"}, {"num": 7, "title": "07. Big Bang Theory 宇宙大爆炸", "url": "audio/07.%20Big%20Bang%20Theory%20%E5%AE%87%E5%AE%99%E5%A4%A7%E7%88%86%E7%82%B8.mp3", "dur": 22.8, "sentences": [{"i": 0, "sentence": "The lecture is about cosmology.", "start": 0.1, "end": 2.763}, {"i": 1, "sentence": "Firstly, scientists believed the Big Bang happened about 10 to 20 billion years ago.", "start": 2.712, "end": 8.562}, {"i": 2, "sentence": "Furthermore, he mentions the universe started in a Big Bang 13.8 billion years ago, and the laws of physics explain how the stars work.", "start": 8.562, "end": 17.525}, {"i": 3, "sentence": "In conclusion, we know how the universe began but don't know what will happen in the future.", "start": 17.525, "end": 22.762}], "translations": ["讲座是关于宇宙学的。", "首先，科学家曾认为大爆炸发生在约 100 至 200 亿年前。", "此外，他提到宇宙始于 138 亿年前的大爆炸，物理定律解释了恒星如何运转。", "总之，我们知道宇宙如何开始，但不知道未来会发生什么。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cg\">cosmology</span>.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cg\">scientists</span> believed <span class=\"cr\">the Big Bang</span> happened about <span class=\"cg\">10 to 20 billion years ago</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cr\">the universe</span> started in a Big Bang <span class=\"cg\">13.8 billion years ago</span>, and <span class=\"cg\">the laws of physics</span> explain <span class=\"cg\">how the stars work</span>.\n", "<span class=\"cgry\">In conclusion, </span>we know<span class=\"cg\"> how the universe began</span> but don't know <span class=\"cg\">what will happen in the future</span>."], "memo": "【宇宙学】宇宙学主题 → 【过去观点】科学家认为100到200亿年前 → 【现在认识】宇宙产生于138亿多年前 → 【物理解释】物理定律解释恒星运作 → 【起点与未来】知起点、不知未来", "memoImg": "memo/07.webp", "memoImgS": "memo/s/07.webp"}, {"num": 8, "title": "08. Obese Women 女性体脂实验", "url": "audio/08.%20Obese%20Women%20%E5%A5%B3%E6%80%A7%E4%BD%93%E8%84%82%E5%AE%9E%E9%AA%8C.mp3", "dur": 29.7, "sentences": [{"i": 0, "sentence": "The lecture is about thirty-one obese women in a Canadian experiment to test changes in their body fat.", "start": 0.1, "end": 6.162}, {"i": 1, "sentence": "Firstly, they followed strict daily dietary requirements and exercised as instructed.", "start": 6.112, "end": 11.887}, {"i": 2, "sentence": "Furthermore, he mentions after six months, some lost weight, others stayed the same, some even gained weight.", "start": 11.887, "end": 19.125}, {"i": 3, "sentence": "In conclusion, there are two explanations.", "start": 19.125, "end": 22.55}, {"i": 4, "sentence": "Some may have been cheating on the diet, or did less exercise consciously or unconsciously for psychological reasons.", "start": 22.55, "end": 29.663}], "translations": ["讲座是关于加拿大一项实验中的 31 名肥胖女性，用于测试其体脂变化。", "首先，她们遵循严格的日常饮食要求并按指示锻炼。", "此外，他提到六个月后，有些人减重，有些人保持不变，有些人体重甚至增加。", "总之，有两种解释。", "有些人可能偷吃违规饮食，或出于心理原因有意无意地减少了锻炼。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">thirty-one obese women</span> in <span class=\"cr\">a Canadian experiment</span> to <span class=\"cr\">test changes in their body fat</span>.\n", "<span class=\"cgry\">Firstly, </span>they followed <span class=\"cg\">strict daily dietary requirements</span> and exercised <span class=\"cg\">as instructed</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>after <span class=\"cg\">six months</span>, some <span class=\"cg\">lost weight</span>, others <span class=\"cg\">stayed the same</span>, some even <span class=\"cg\">gained weight</span>.\n", "<span class=\"cgry\">In conclusion, </span>there are <span class=\"cg\">two explanations</span>. ", "Some may have been <span class=\"cg\">cheating on the diet</span>, or <span class=\"cg\">did less exercise consciously or unconsciously</span> for <span class=\"cg\">psychological reasons</span>."], "memo": "【加拿大实验】31 肥胖女性 · 测体脂变化 → 【严格控制】节食+按指示运动 → 【结果分化】降/平/升 → 【两种解释】饮食作弊 · 心理少运动", "memoImg": "memo/08.webp", "memoImgS": "memo/s/08.webp"}, {"num": 9, "title": "09. The Decline of Bees 蜜蜂数量减少", "url": "audio/09.%20The%20Decline%20of%20Bees%20%E8%9C%9C%E8%9C%82%E6%95%B0%E9%87%8F%E5%87%8F%E5%B0%91.mp3", "dur": 24.8, "sentences": [{"i": 0, "sentence": "The lecture says that bees are in decline, which is well-documented and supported by good, strong scientific evidence.", "start": 0.1, "end": 7.438}, {"i": 1, "sentence": "Firstly, drivers of decline vary across species.", "start": 7.388, "end": 11.463}, {"i": 2, "sentence": "Furthermore, he mentions the effects of pollinator loss are not catastrophic now, but they could be.", "start": 11.463, "end": 17.875}, {"i": 3, "sentence": "Finally, the positive side is that people are aware of the problem and are taking action to fix the recognized problems.", "start": 17.875, "end": 24.788}], "translations": ["讲座指出，蜜蜂数量正在减少，这有充分记录和坚实的科学证据支持。", "首先，不同物种数量下降的驱动因素各不相同。", "此外，他提到传粉者减少的影响现在尚不具灾难性，但有可能变成灾难。", "最后，积极的一面是人们已意识到这个问题，并正在采取行动解决已确认的问题。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture says that </span><span class=\"cr\">bees are in decline</span>, which is well-documented and supported by good, strong scientific evidence.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cg\">drivers</span> of decline <span class=\"cg\">vary across species</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cg\">the effects of pollinator loss</span> are <span class=\"cg\">not catastrophic</span> now, but they could be.\n", "<span class=\"cgry\">Finally, </span>the positive side is that people are <span class=\"cg\">aware of the problem</span> and are <span class=\"cg\">taking action</span> to <span class=\"cg\">fix the recognized problems</span>."], "memo": "【蜜蜂减少】减少有实证 → 【原因各异】因物种而异 → 【影响可控】非灾难 → 【积极行动】觉醒·行动·修复", "memoImg": "memo/09.webp", "memoImgS": "memo/s/09.webp"}, {"num": 10, "title": "10. Smart Consumers and Brand 品牌与顾客需求", "url": "audio/10.%20Smart%20Consumers%20and%20Brand%20%E5%93%81%E7%89%8C%E4%B8%8E%E9%A1%BE%E5%AE%A2%E9%9C%80%E6%B1%82.mp3", "dur": 24.3, "sentences": [{"i": 0, "sentence": "The lecture says that a brand is essential to smart consumers.", "start": 0.1, "end": 4.062}, {"i": 1, "sentence": "Firstly, they make decisions based on brands and would pay more for a better brand.", "start": 4.013, "end": 9.4}, {"i": 2, "sentence": "Furthermore, he mentions the Second Moment of Truth, which means the product must be of great quality.", "start": 9.4, "end": 15.6}, {"i": 3, "sentence": "In conclusion, there are fundamental engineering contradictions, as consumers want products both strong and soft, or both light and strong.", "start": 15.6, "end": 24.3}], "translations": ["讲座指出，品牌对精明的消费者至关重要。", "首先，他们依据品牌做决策，并愿意为更好的品牌多付钱。", "此外，他提到“第二真相时刻”，意味着产品必须具备极佳品质。", "总之，存在根本性的工程矛盾，因为消费者既想要产品坚固又想要柔软，既想要轻便又想要结实。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture says that </span><span class=\"cr\">a brand</span> is <span class=\"cg\">essential</span> to <span class=\"cr\">smart consumers</span>.\n", "<span class=\"cgry\">Firstly, </span>they <span class=\"cg\">make decisions</span> based on brands and would <span class=\"cg\">pay more for a better brand</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cr\">the Second Moment of Truth</span>, which means <span class=\"cg\">the product</span> must be of <span class=\"cg\">great quality</span>.\n", "<span class=\"cgry\">In conclusion, </span>there are <span class=\"cr\">fundamental engineering contradictions</span>, as consumers want products both <span class=\"cg\">strong and soft</span>, or both <span class=\"cg\">light and strong</span>."], "memo": "【品牌】精明消费者必不可少 → 【购买决策】依品牌决策、愿多付钱 → 【第二真相时刻】产品必须质量过硬 → 【工程矛盾】既柔软又结实、既轻便又结实", "memoImg": "memo/10.webp", "memoImgS": "memo/s/10.webp"}, {"num": 11, "title": "11. Misuse of Drugs 用药不当的危害", "url": "audio/11.%20Misuse%20of%20Drugs%20%E7%94%A8%E8%8D%AF%E4%B8%8D%E5%BD%93%E7%9A%84%E5%8D%B1%E5%AE%B3.mp3", "dur": 24.5, "sentences": [{"i": 0, "sentence": "The lecture says that keeping drugs at home can be dangerous.", "start": 0.1, "end": 3.987}, {"i": 1, "sentence": "Firstly, the leftover drugs may be accidentally ingested by children, or patients may take them after the expiration date.", "start": 3.938, "end": 11.45}, {"i": 2, "sentence": "Furthermore, he mentions the wrong reasons, such as an allergy or wrong indications.", "start": 11.45, "end": 17.288}, {"i": 3, "sentence": "In conclusion, to prevent this, physicians should give appropriate prescriptions and patients must take the full course of the drug.", "start": 17.288, "end": 24.488}], "translations": ["讲座指出，把药物存放在家中可能很危险。", "首先，剩余药物可能被儿童误服，或患者过了保质期还在服用。", "此外，他提到人们还会因错误原因用药，如过敏或错误的适应症。", "总之，为避免这种情况，医生应开具合适的处方，患者必须服完整个疗程。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture says that </span><span class=\"cr\">keeping drugs at home</span> can be <span class=\"cr\">dangerous</span>.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cr\">the leftover drugs</span> may be <span class=\"cg\">accidentally ingested by children</span>, or <span class=\"cg\">patients</span> may take them after the <span class=\"cg\">expiration date</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>the <span class=\"cg\">wrong reasons</span>, such as <span class=\"cg\">an allergy</span> or <span class=\"cg\">wrong indications</span>.\n", "<span class=\"cgry\">In conclusion, </span>to <span class=\"cg\">prevent</span> this, <span class=\"cg\">physicians</span> should <span class=\"cg\">give appropriate prescriptions</span> and patients must <span class=\"cg\">take the full course of the drug</span>."], "memo": "【居家存药】有危险 → 【风险】儿童误服、患者服过期药 → 【错误原因】过敏、适应症不对 → 【对策】医生开适当处方、患者完成整个疗程", "memoImg": "memo/11.webp", "memoImgS": "memo/s/11.webp"}, {"num": 12, "title": "12. Genes Affect Human Behaviors 基因影响人类行为", "url": "audio/12.%20Genes%20Affect%20Human%20Behaviors%20%E5%9F%BA%E5%9B%A0%E5%BD%B1%E5%93%8D%E4%BA%BA%E7%B1%BB%E8%A1%8C%E4%B8%BA.mp3", "dur": 27.0, "sentences": [{"i": 0, "sentence": "The lecture is about genes.", "start": 0.1, "end": 2.525}, {"i": 1, "sentence": "Firstly, since the discovery of the DNA structure, people believed that genes have an impact only on people’s physical structure.", "start": 2.475, "end": 10.25}, {"i": 2, "sentence": "Furthermore, he mentions the study of mapping of genes found a genetic responsibility for humans' physical and psychological behaviors.", "start": 10.25, "end": 18.325}, {"i": 3, "sentence": "In conclusion, the research on genes has provided integrated information and can benefit biology, psychology, and neuroscience.", "start": 18.325, "end": 27.025}], "translations": ["讲座是关于基因的。", "首先，自 DNA 结构被发现以来，人们认为基因只影响人的身体结构。", "此外，他提到基因图谱研究发现，人类的生理与心理行为都有遗传因素。", "总之，基因研究提供了整合性的信息，可惠及生物学、心理学和神经科学。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">genes</span>.\n", "<span class=\"cgry\">Firstly, </span>since <span class=\"cg\">the discovery of the DNA structure</span>, people believed that <span class=\"cr\">genes</span> have an impact only on <span class=\"cr\">people’s physical structure</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cg\">the study of mapping of genes</span> found <span class=\"cg\">a genetic responsibility</span> for humans' <span class=\"cr\">physical and psychological behaviors</span>.\n", "<span class=\"cgry\">In conclusion, </span><span class=\"cg\">the research on genes</span> has provided <span class=\"cg\">integrated information </span>and can benefit <span class=\"cg\">biology</span>, <span class=\"cg\">psychology</span>, and <span class=\"cg\">neuroscience</span>."], "memo": "【基因】影响生理与心理行为 → 【以前】DNA发现后认为只影响生理 → 【发现】2001基因图谱、行为有基因责任 → 【应用】综合信息惠及三学科", "memoImg": "memo/12.webp", "memoImgS": "memo/s/12.webp"}, {"num": 13, "title": "13. Market Economy 市场经济", "url": "audio/13.%20Market%20Economy%20%E5%B8%82%E5%9C%BA%E7%BB%8F%E6%B5%8E.mp3", "dur": 24.6, "sentences": [{"i": 0, "sentence": "The lecture is about the notions of pragmatism and democracy in tempering the market economy.", "start": 0.1, "end": 5.425}, {"i": 1, "sentence": "Firstly, the Industrial Revolution had negative effects on the living standards of the working classes.", "start": 5.375, "end": 11.45}, {"i": 2, "sentence": "Furthermore, he mentions legislation about working conditions and better environmental conditions to circumscribe the worst behaviors, which reversed some damage.", "start": 11.45, "end": 20.45}, {"i": 3, "sentence": "In conclusion, the benefits are shared far more widely.", "start": 20.45, "end": 24.613}], "translations": ["讲座是关于实用主义与民主理念如何调节市场经济。", "首先，工业革命对工人阶级的生活水平产生了负面影响。", "此外，他提到有关工作条件和更好环境的立法限制了一些最恶劣的行为，从而扭转了部分损害。", "总之，其益处得到远为广泛的分享。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">the notions of pragmatism and democracy</span> in <span class=\"cr\">tempering the market economy</span>.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cg\">the Industrial Revolution</span> had negative effects on <span class=\"cg\">the living standards</span> of <span class=\"cg\">the working classes</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cg\">legislation about working conditions</span> and <span class=\"cg\">better environmental conditions</span> to <span class=\"cg\">circumscribe the worst behaviors</span>, which <span class=\"cg\">reversed some damage</span>.\n", "<span class=\"cgry\">In conclusion, </span><span class=\"cg\">the benefits</span> are <span class=\"cg\">shared far more widely</span>."], "memo": "【市场经济】被实用主义与民主缓和 → 【问题】工业革命损害工人生活水平 → 【解决】立法约束最恶劣行为、扭转损害 → 【现在】好处分享远超百年前", "memoImg": "memo/13.webp", "memoImgS": "memo/s/13.webp"}, {"num": 14, "title": "14. Therapeutic Environment 治疗环境", "url": "audio/14.%20Therapeutic%20Environment%20%E6%B2%BB%E7%96%97%E7%8E%AF%E5%A2%83.mp3", "dur": 25.8, "sentences": [{"i": 0, "sentence": "The lecture is about the therapeutic environment.", "start": 0.1, "end": 3.2}, {"i": 1, "sentence": "Firstly, fresh air and daylight can have positive impacts on patients’ recovery, and architecture has the same positive impacts.", "start": 3.15, "end": 11.312}, {"i": 2, "sentence": "Furthermore, he mentions viewing hospital yards helps people rest, sleep well, release their stress and pain.", "start": 11.312, "end": 18.587}, {"i": 3, "sentence": "In conclusion, 90% of nurses in hospitals agreed that the designed hospital environment is linked to patients’ recovery.", "start": 18.587, "end": 25.825}], "translations": ["讲座是关于治疗环境的。", "首先，新鲜空气和日光对患者康复有积极影响，建筑同样具有积极作用。", "此外，他提到观看医院庭院有助于人们休息、睡好、释放压力和疼痛。", "总之，医院里 90% 的护士认同，精心设计的医院环境与患者康复有关。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">the therapeutic environment</span>.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cg\">fresh air</span> and <span class=\"cg\">daylight</span> can have <span class=\"cr\">positive impacts on patients’ recovery</span>, and <span class=\"cg\">architecture</span> has <span class=\"cg\">the same positive impacts</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cg\">viewing hospital yards</span> helps people <span class=\"cg\">rest</span>, <span class=\"cg\">sleep well</span>, <span class=\"cg\">release their stress and pain</span>.\n", "<span class=\"cgry\">In conclusion, </span>90% of <span class=\"cg\">nurses in hospitals</span> agreed that <span class=\"cg\">the designed hospital environment</span> is linked to patients’ recovery."], "memo": "【治疗环境】研究起源 → 【自然与建筑】空气日光、积极影响康复、建筑同效 → 【庭院】休息睡眠、释放压力疼痛 → 【证据】九成护士认可环境与康复相关", "memoImg": "memo/14.webp", "memoImgS": "memo/s/14.webp"}, {"num": 15, "title": "15. Babies Just Want to Be Smiled at 婴儿喜欢笑容", "url": "audio/15.%20Babies%20Just%20Want%20to%20Be%20Smiled%20at%20%E5%A9%B4%E5%84%BF%E5%96%9C%E6%AC%A2%E7%AC%91%E5%AE%B9.mp3", "dur": 25.4, "sentences": [{"i": 0, "sentence": "The lecture is about interactions between babies and their mothers, especially babies' smiles.", "start": 0.1, "end": 5.888}, {"i": 1, "sentence": "The speaker first provides information on researchers finding that babies' smiles are strategic but not spontaneous.", "start": 5.838, "end": 12.688}, {"i": 2, "sentence": "Furthermore, he mentions babies smile in hopes others will smile at them, with a manner of sophisticated timing.", "start": 12.688, "end": 19.562}, {"i": 3, "sentence": "In conclusion, mothers seek interactions, whereas babies simply want to be smiled at.", "start": 19.562, "end": 25.35}], "translations": ["讲座是关于婴儿与母亲之间的互动，尤其是婴儿的微笑。", "讲者首先谈到，研究人员发现婴儿的微笑是有策略的，而非自发的。", "此外，他提到婴儿微笑是希望别人也对他们笑，且时机把握相当精巧。", "总之，母亲寻求互动，而婴儿只是想要别人对他们微笑。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">interactions between babies and their mothers</span>, especially <span class=\"cr\">babies' smiles</span>.\n", "<span class=\"cgry\">The speaker first provides information on </span><span class=\"cg\">researchers</span> finding that <span class=\"cr\">babies' smiles</span> are <span class=\"cg\">strategic</span> but <span class=\"cg\">not spontaneous</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>babies smile in hopes others will smile at them, with <span class=\"cg\">a manner of sophisticated timing</span>.\n", "<span class=\"cgry\">In conclusion, </span>mothers seek interactions, whereas babies simply <span class=\"cg\">want to be smiled at</span>."], "memo": "【母婴互动】婴儿微笑有策略非自发 → 【方式】精密时机求回应 → 【互动差异】母亲求互动、婴儿只想被微笑", "memoImg": "memo/15.webp", "memoImgS": "memo/s/15.webp"}, {"num": 16, "title": "16. Newspaper Industry 新闻业下滑", "url": "audio/16.%20Newspaper%20Industry%20%E6%96%B0%E9%97%BB%E4%B8%9A%E4%B8%8B%E6%BB%91.mp3", "dur": 25.1, "sentences": [{"i": 0, "sentence": "The lecture says that the economic models of newspapers are crumbling.", "start": 0.1, "end": 4.362}, {"i": 1, "sentence": "The speaker first provides information on the newspaper industry, which has been shrinking, and newspaper publishers’ cash flow was red or at the breakeven point.", "start": 4.312, "end": 13.325}, {"i": 2, "sentence": "Furthermore, he mentions the decreasing number of advertising and buyers, and some newspapers are online only.", "start": 13.325, "end": 20.375}, {"i": 3, "sentence": "In conclusion, staff has dropped by 30% to 40%.", "start": 20.375, "end": 25.113}], "translations": ["讲座指出，报纸的经济模式正在瓦解。", "讲者首先谈到报业一直在萎缩，报纸出版商的现金流呈赤字或仅处于盈亏平衡点。", "此外，他提到广告和购买者数量下降，有些报纸只做线上版。", "总之，员工人数下降了 30% 到 40%。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture says that </span><span class=\"cr\">the economic models of newspapers</span> are <span class=\"cr\">crumbling</span>.\n", "<span class=\"cgry\">The speaker first provides information on </span><span class=\"cr\">the newspaper industry</span>, which has been <span class=\"cg\">shrinking</span>, and <span class=\"cg\">newspaper publishers’ cash flow</span> <span class=\"cg\">was red</span> or at <span class=\"cg\">the breakeven point</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cg\">the decreasing number of advertising and buyers</span>, and some newspapers are <span class=\"cg\">online only</span>.\n", "<span class=\"cgry\">In conclusion, </span><span class=\"cg\">staff</span> has <span class=\"cg\">dropped</span> by 30% to 40%."], "memo": "【报业下滑】经济模式崩塌 → 【萎缩与亏损】行业萎缩、现金流亏损或仅收支平衡 → 【原因与转型】广告买家减少、部分仅线上发行 → 【员工缩减】员工下降三到四成", "memoImg": "memo/16.webp", "memoImgS": "memo/s/16.webp"}, {"num": 17, "title": "17. Automated Vehicles 自动化汽车", "url": "audio/17.%20Automated%20Vehicles%20%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B1%BD%E8%BD%A6.mp3", "dur": 26.2, "sentences": [{"i": 0, "sentence": "The lecture says that automation technology in vehicles is a hot topic as it is safe and fuel-efficient.", "start": 0.1, "end": 6.338}, {"i": 1, "sentence": "Firstly, the American Traffic Safety Regulations define different levels of automation.", "start": 6.287, "end": 11.825}, {"i": 2, "sentence": "Furthermore, he mentions Level four is completely under the control of the vehicle.", "start": 11.825, "end": 17.0}, {"i": 3, "sentence": "In conclusion, Level three is conditional automation, so drivers must intervene under some circumstances, which is more acceptable to most of the public.", "start": 17.0, "end": 26.212}], "translations": ["讲座指出，汽车自动化技术是热门话题，因为它安全又省油。", "首先，美国交通安全法规定义了不同级别的自动化。", "此外，他提到第四级完全由车辆控制。", "总之，第三级是条件自动化，因此司机在某些情况下必须介入，这一点对大多数公众而言更容易接受。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture says that </span><span class=\"cr\">automation technology in vehicles</span> is <span class=\"cg\">a hot topic</span> as it is <span class=\"cg\">safe</span> and <span class=\"cg\">fuel-efficient</span>.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cg\">the American Traffic Safety Regulations</span> define <span class=\"cg\">different levels of automation</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cg\">Level four</span> is <span class=\"cg\">completely</span> <span class=\"cg\">under the control of the vehicle</span>.\n", "<span class=\"cgry\">In conclusion, </span><span class=\"cg\">Level three</span> is <span class=\"cg\">conditional automation</span>, so <span class=\"cg\">drivers</span> must <span class=\"cg\">intervene under some circumstances</span>, which is <span class=\"cg\">more acceptable to most of the public</span>."], "memo": "【车辆自动化】热门话题、安全节能 → 【法规分级】美国交通安全法规界定不同等级 → 【四级】完全由车辆控制 → 【三级】有条件自动化、驾驶员需介入、公众更易接受", "memoImg": "memo/17.webp", "memoImgS": "memo/s/17.webp"}, {"num": 18, "title": "18. Chimpanzees 拯救大猩猩", "url": "audio/18.%20Chimpanzees%20%E6%8B%AF%E6%95%91%E5%A4%A7%E7%8C%A9%E7%8C%A9.mp3", "dur": 26.9, "sentences": [{"i": 0, "sentence": "The lecture is about the Nonhuman Rights Project, an organization fighting for legal rights for nonhuman animals.", "start": 0.1, "end": 6.787}, {"i": 1, "sentence": "Firstly, the project chose Tommy as the plaintiff in the New York Court and asked to release him, who was locked in a cage for research purposes.", "start": 6.737, "end": 15.113}, {"i": 2, "sentence": "Furthermore, he mentions chimpanzees have cognitive capabilities.", "start": 15.113, "end": 19.863}, {"i": 3, "sentence": "In conclusion, the court didn’t approve the appeal because chimpanzees are not human, though they have cognitive skills.", "start": 19.863, "end": 26.875}], "translations": ["讲座是关于“非人类权利项目”，一个为非人类动物争取法律权利的组织。", "首先，该项目选择汤米作为纽约法庭的原告，要求释放这只为研究而被关在笼中的猩猩。", "此外，他提到黑猩猩具备认知能力。", "总之，法院没有批准上诉，因为黑猩猩虽具备认知能力，但并非人类。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cg\">the Nonhuman Rights Project</span>, <span class=\"cg\">an organization</span> fighting for <span class=\"cg\">legal rights</span> for nonhuman <span class=\"cg\">animals</span>.\n", "<span class=\"cgry\">Firstly, </span>the project chose <span class=\"cr\">Tommy</span> as <span class=\"cg\">the plaintiff</span> in <span class=\"cg\">the New York Court</span> and asked to <span class=\"cg\">release him</span>, who was <span class=\"cg\">locked in a cage for research purposes</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cr\">chimpanzees </span>have <span class=\"cr\">cognitive capabilities</span>.\n", "<span class=\"cgry\">In conclusion, </span>the court <span class=\"cg\">didn’t approve the appeal</span> because chimpanzees are <span class=\"cg\">not human</span>, though they have <span class=\"cr\">cognitive skills</span>."], "memo": "【非人类权利项目】为动物争取法律权利 → 【诉讼】Tommy 为原告在纽约法庭求释放、因研究被关笼 → 【认知】黑猩猩有认知能力与技能 → 【法院驳回】法院因其非人类驳回上诉", "memoImg": "memo/18.webp", "memoImgS": "memo/s/18.webp"}, {"num": 19, "title": "19. The Separation of Powers 三权分立", "url": "audio/19.%20The%20Separation%20of%20Powers%20%E4%B8%89%E6%9D%83%E5%88%86%E7%AB%8B.mp3", "dur": 24.0, "sentences": [{"i": 0, "sentence": "The lecture says that the separation of powers is related to the checks and balances.", "start": 0.1, "end": 5.213}, {"i": 1, "sentence": "Firstly, the Constitution includes the legislative branch that makes the law.", "start": 5.162, "end": 10.162}, {"i": 2, "sentence": "Furthermore, he mentions the president who is appointed by the Senate to carry out the law, and the judicial authorities who interpret the law.", "start": 10.162, "end": 17.975}, {"i": 3, "sentence": "In conclusion, there is a blurry line between the legislative and executive roles in the past century.", "start": 17.975, "end": 23.988}], "translations": ["讲座指出，三权分立与制衡有关。", "首先，宪法包含负责制定法律的立法分支。", "此外，他提到由参议院任命、负责执行法律的总统，以及解释法律的司法机关。", "总之，在过去一个世纪里，立法与行政角色的界限变得模糊。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture says that </span><span class=\"cr\">the separation of powers</span> is related to <span class=\"cg\">the checks and balances</span>.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cg\">the Constitution</span> includes <span class=\"cr\">the legislative branch</span> that <span class=\"cg\">makes the law</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cr\">the president</span> who is appointed by <span class=\"cg\">the Senate</span> to <span class=\"cg\">carry out the law</span>, and <span class=\"cr\">the judicial authorities</span> who <span class=\"cg\">interpret the law</span>.\n", "<span class=\"cgry\">In conclusion, </span>there is <span class=\"cg\">a blurry line between the legislative and executive roles</span> in the past century."], "memo": "【三权分立】与国家制衡相关 → 【构成】宪法含立法、总统、司法，总统由参议院委任 → 【职能】制定、执行、解释法律 → 【现状】百年来立法与行政界限模糊", "memoImg": "memo/19.webp", "memoImgS": "memo/s/19.webp"}, {"num": 20, "title": "20. Fight-or-flight Response 迎战或逃跑反应", "url": "audio/20.%20Fight-or-flight%20Response%20%E8%BF%8E%E6%88%98%E6%88%96%E9%80%83%E8%B7%91%E5%8F%8D%E5%BA%94.mp3", "dur": 25.2, "sentences": [{"i": 0, "sentence": "The lecture is about the fight-or-flight response and the role of emotions.", "start": 0.1, "end": 4.463}, {"i": 1, "sentence": "Firstly, basic emotions evolved as signals for self-preservation and safety.", "start": 4.412, "end": 9.787}, {"i": 2, "sentence": "Furthermore, he mentions the primitive and reactive parts of our brain control instinctive responses and communicate with our body.", "start": 9.787, "end": 17.325}, {"i": 3, "sentence": "In conclusion, it is a normal physiological response to fear or anxiety, with appropriate actions to run away or fight.", "start": 17.325, "end": 25.188}], "translations": ["讲座是关于“迎战或逃跑”反应以及情绪的作用。", "首先，基本情绪是作为自我保护和安全的信号演化而来的。", "此外，他提到大脑中原始且反应性的部分控制着本能反应，并与身体沟通。", "总之，这是面对恐惧或焦虑时的正常生理反应，伴随逃跑或迎战的相应行动。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">the fight-or-flight response</span> and <span class=\"cr\">the role of emotions</span>.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cg\">basic emotions</span> evolved as <span class=\"cg\">signals</span> for <span class=\"cg\">self-preservation and safety</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>the <span class=\"cg\">primitive and reactive parts of our brain</span> control <span class=\"cg\">instinctive responses</span> and <span class=\"cg\">communicate with our body</span>.\n", "<span class=\"cgry\">In conclusion, </span>it is <span class=\"cg\">a normal physiological response</span> to <span class=\"cg\">fear</span> or <span class=\"cg\">anxiety</span>, with <span class=\"cg\">appropriate actions</span> to <span class=\"cg\">run away</span> or <span class=\"cg\">fight</span>."], "memo": "【战或逃反应】帮助思考情绪作用 → 【进化】基本情绪是自我保护与安全的信号 → 【大脑】原始脑区控制本能反应并与身体交流 → 【正常反应】对恐惧焦虑的正常生理反应、逃跑或战斗", "memoImg": "memo/20.webp", "memoImgS": "memo/s/20.webp"}, {"num": 21, "title": "21. Need 需要和需求", "url": "audio/21.%20Need%20%E9%9C%80%E8%A6%81%E5%92%8C%E9%9C%80%E6%B1%82.mp3", "dur": 22.9, "sentences": [{"i": 0, "sentence": "The lecture is about several ways to use and interpret the word need.", "start": 0.1, "end": 4.325}, {"i": 1, "sentence": "Firstly, saying I need a holiday is an expression of a strong desire but not a basic need.", "start": 4.275, "end": 10.262}, {"i": 2, "sentence": "Furthermore, he mentions that the plant needs water is an objective statement, because it is essential, like sunlight and water to plants.", "start": 10.262, "end": 18.525}, {"i": 3, "sentence": "Finally, there is a psychological use when someone lacks something.", "start": 18.525, "end": 22.863}], "translations": ["讲座是关于使用和解释“need”一词的几种方式。", "首先，“我需要一个假期”表达的是一种强烈的愿望，而非基本需求。", "此外，他提到“植物需要水”是一个客观陈述，因为水对植物来说是必不可少的，如同阳光和水。", "最后，还有一种当某人缺乏某物时的心理用法。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cg\">several ways</span> to <span class=\"cr\">use and interpret the word need</span>.\n", "<span class=\"cgry\">Firstly, </span>saying <span class=\"cg\">I need a holiday</span> is <span class=\"cg\">an expression of a strong desire</span> but not <span class=\"cg\">a basic need</span>.\n", "<span class=\"cgry\">Furthermore, he mentions that </span><span class=\"cg\">the plant needs water</span> is <span class=\"cg\">an objective statement</span>, because it is <span class=\"cg\">essential</span>, like <span class=\"cg\">sunlight</span> and <span class=\"cg\">water</span> to <span class=\"cg\">plants</span>.\n", "<span class=\"cgry\">Finally, </span>there is <span class=\"cg\">a psychological use</span> when someone <span class=\"cg\">lacks something</span>."], "memo": "【need 用法】“需要”的多种用法 → 【主观愿望】想要假期＝强烈愿望、非基本需求 → 【客观需求】植物需水＝客观陈述、如阳光与水般必需 → 【心理用法】缺少某物", "memoImg": "memo/21.webp", "memoImgS": "memo/s/21.webp"}, {"num": 22, "title": "22. Globalization & Detraditionalization 全球化导致传统文化丧失", "url": "audio/22.%20Globalization%20%26%20Detraditionalization%20%E5%85%A8%E7%90%83%E5%8C%96%E5%AF%BC%E8%87%B4%E4%BC%A0%E7%BB%9F%E6%96%87%E5%8C%96%E4%B8%A7%E5%A4%B1.mp3", "dur": 24.4, "sentences": [{"i": 0, "sentence": "The lecture is about a global village with instant communications through the internet.", "start": 0.1, "end": 4.713}, {"i": 1, "sentence": "Firstly, the world is also shrinking due to distance and speed.", "start": 4.662, "end": 8.988}, {"i": 2, "sentence": "Furthermore, he mentions globalization has brought detraditionalization because of the erosion of traditional culture and conventional ways of doing things.", "start": 8.988, "end": 17.663}, {"i": 3, "sentence": "Finally, young people are rejecting the culture in which they grew up and are keen on imitating the Hollywood models.", "start": 17.663, "end": 24.387}], "translations": ["讲座是关于一个通过网络实现即时通讯的“地球村”。", "首先，由于距离和速度，世界也在缩小。", "此外，他提到全球化带来了去传统化，原因是传统文化和惯常行事方式遭到侵蚀。", "最后，年轻人正在排斥自己成长其中的文化，热衷于模仿好莱坞模式。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cg\">a global village</span> with <span class=\"cg\">instant communications</span> through <span class=\"cr\">the internet</span>.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cg\">the world is also shrinking</span> due to <span class=\"cg\">distance</span> and <span class=\"cg\">speed</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cr\">globalization</span> has brought <span class=\"cr\">detraditionalization</span> because of <span class=\"cg\">the erosion of traditional culture and conventional ways of doing things</span>.\n", "<span class=\"cgry\">Finally, </span><span class=\"cg\">young people</span> are <span class=\"cg\">rejecting the culture</span> <span class=\"cg\">in which they grew up</span> and are keen on <span class=\"cg\">imitating the Hollywood models</span>."], "memo": "【地球村】世界＝地球村、因特网即刻交流 → 【世界缩小】距离与速度使世界缩小 → 【去传统化】全球化致去传统化、传统文化被侵蚀 → 【例证】年轻人拒绝成长文化、模仿好莱坞", "memoImg": "memo/22.webp", "memoImgS": "memo/s/22.webp"}, {"num": 23, "title": "23. What happened to Journalism 网络影响传媒", "url": "audio/23.%20What%20happened%20to%20Journalism%20%E7%BD%91%E7%BB%9C%E5%BD%B1%E5%93%8D%E4%BC%A0%E5%AA%92.mp3", "dur": 23.1, "sentences": [{"i": 0, "sentence": "The lecture says that the rise of the Internet has a great impact on journalism in how it’s produced and how it’s consumed.", "start": 0.1, "end": 6.675}, {"i": 1, "sentence": "Firstly, people took steps to feel the change in journalism.", "start": 6.625, "end": 10.887}, {"i": 2, "sentence": "Furthermore, he mentions the internet improved the speed of news spreading and helped people gain information in various ways.", "start": 10.887, "end": 18.0}, {"i": 3, "sentence": "Finally, a small piece of ordinary video can be a new type of journalism.", "start": 18.0, "end": 23.125}], "translations": ["讲座指出，互联网的兴起对新闻业的生产与消费方式产生了巨大影响。", "首先，人们采取行动去感受新闻业的变化。", "此外，他提到互联网提高了新闻传播速度，并帮助人们以多种方式获取信息。", "最后，一小段普通视频也能成为一种新型新闻。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture says that </span><span class=\"cr\">the rise of the Internet</span> has <span class=\"cr\">a great impact on journalism</span> in <span class=\"cg\">how it’s produced</span> and <span class=\"cg\">how it’s consumed</span>.\n", "<span class=\"cgry\">Firstly, </span>people took steps to feel <span class=\"cg\">the change in journalism</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>the internet improved <span class=\"cg\">the speed of news spreading</span> and helped people <span class=\"cg\">gain information in various ways</span>.\n", "<span class=\"cgry\">Finally, </span><span class=\"cg\">a small piece of ordinary video</span> can be <span class=\"cg\">a new type of journalism</span>."], "memo": "【网络兴起】网络兴起冲击新闻业 · 生产消费双变 → 【渐进】感受变化需要过程 → 【提速】传播更快、渠道更多 → 【新形式】普通视频成为新传媒", "memoImg": "memo/23.webp", "memoImgS": "memo/s/23.webp"}, {"num": 24, "title": "24. Cultural Diversity in Australia 澳大利亚多元文化", "url": "audio/24.%20Cultural%20Diversity%20in%20Australia%20%E6%BE%B3%E5%A4%A7%E5%88%A9%E4%BA%9A%E5%A4%9A%E5%85%83%E6%96%87%E5%8C%96.mp3", "dur": 27.9, "sentences": [{"i": 0, "sentence": "The lecture says that Australia is a multicultural country with immigrants from all over the world and home to the world’s oldest continuous cultures.", "start": 0.1, "end": 7.963}, {"i": 1, "sentence": "Firstly, cultural diversity is a significant feature of Australian society.", "start": 7.912, "end": 13.2}, {"i": 2, "sentence": "Furthermore, he mentions cultural diversity benefits the productivity, economic performance and labor force of Australia.", "start": 13.2, "end": 20.975}, {"i": 3, "sentence": "Finally, according to the statistics, nearly half of Australians were born overseas or have a foreign-born parent.", "start": 20.975, "end": 27.887}], "translations": ["讲座指出，澳大利亚是一个多元文化国家，拥有来自世界各地的移民，也是世界上最古老的延续文化的家园。", "首先，文化多样性是澳大利亚社会的一个显著特征。", "此外，他提到文化多样性有利于澳大利亚的生产力、经济表现和劳动力。", "最后，据统计，将近一半的澳大利亚人出生在海外，或父母中有一方在海外出生。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture says that </span><span class=\"cr\">Australia</span> is <span class=\"cg\">a multicultural country</span> with <span class=\"cg\">immigrants</span> from all over the world and home to <span class=\"cg\">the world’s oldest continuous cultures</span>.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cr\">cultural diversity</span> is <span class=\"cg\">a significant feature of Australian society</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cr\">cultural diversity</span> benefits <span class=\"cg\">the productivity</span>, <span class=\"cg\">economic performance</span> and <span class=\"cg\">labor force</span> of <span class=\"cr\">Australia</span>.\n", "<span class=\"cgry\">Finally, </span>according to <span class=\"cg\">the statistics</span>, nearly <span class=\"cg\">half of Australians</span> were <span class=\"cg\">born overseas</span> or have <span class=\"cg\">a foreign-born parent</span>."], "memo": "【多元文化】澳洲多元移民国 · 世界最古老延续文化 → 【特征与益处】多样性成社会显著特征、提生产率经济劳动力 → 【数据】近半数海外出生或有外籍父母", "memoImg": "memo/24.webp", "memoImgS": "memo/s/24.webp"}, {"num": 25, "title": "25. Manager 经理应该自我提升", "url": "audio/25.%20Manager%20%E7%BB%8F%E7%90%86%E5%BA%94%E8%AF%A5%E8%87%AA%E6%88%91%E6%8F%90%E5%8D%87.mp3", "dur": 25.8, "sentences": [{"i": 0, "sentence": "The lecture is about the best manager.", "start": 0.1, "end": 2.812}, {"i": 1, "sentence": "Firstly, although managers are busy, they should read more books and go back to university to improve themselves.", "start": 2.763, "end": 9.65}, {"i": 2, "sentence": "Furthermore, he mentions someone who knows their organization better is not the best, but a professor of management with broad perspectives is.", "start": 9.65, "end": 17.887}, {"i": 3, "sentence": "Finally, experience is not necessary, but management knowledge is more important, because learning management is a highlighted point.", "start": 17.887, "end": 25.762}], "translations": ["讲座是关于最好的经理。", "首先，尽管经理很忙，他们也应多读书、回大学深造以提升自己。", "此外，他提到最了解自己组织的人并不是最好的，拥有广阔视野的管理学教授才是。", "最后，经验并非必需，管理知识更重要，因为学习管理才是重点所在。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">the best manager</span>.\n", "<span class=\"cgry\">Firstly, </span>although <span class=\"cg\">managers are busy</span>, they should <span class=\"cg\">read more books</span> and <span class=\"cg\">go back to</span> <span class=\"cg\">university</span> to <span class=\"cg\">improve themselves</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cg\">someone who knows their organization better</span> is not the best, but <span class=\"cg\">a professor of management</span> with <span class=\"cg\">broad perspectives</span> is.\n", "<span class=\"cgry\">Finally, </span><span class=\"cg\">experience</span> is not necessary, but <span class=\"cg\">management knowledge</span> is more important, because <span class=\"cg\">learning management</span> is <span class=\"cg\">a highlighted point</span>."], "memo": "【经理自我提升】最佳经理自我提升、忙也读书回大学 → 【最佳人选】非知组织者而是管理教授+广视野 → 【经验知识】经验次要、管理知识与学习是重点", "memoImg": "memo/25.webp", "memoImgS": "memo/s/25.webp"}, {"num": 26, "title": "26. Credit Card Experiment 信用卡实验", "url": "audio/26.%20Credit%20Card%20Experiment%20%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%AE%9E%E9%AA%8C.mp3", "dur": 22.6, "sentences": [{"i": 0, "sentence": "The lecture is about an experiment on customers’ behaviors.", "start": 0.1, "end": 3.875}, {"i": 1, "sentence": "Firstly, one group of inactive credit card users received a message offering benefits that they could gain by using the cards.", "start": 3.825, "end": 11.025}, {"i": 2, "sentence": "Furthermore, he mentions the other group received a message implying a penalty if it was not used.", "start": 11.025, "end": 17.0}, {"i": 3, "sentence": "Finally, customers are more motivated by a potential loss than by the benefit they could gain.", "start": 17.0, "end": 22.55}], "translations": ["讲座是关于一项针对顾客行为的实验。", "首先，一组不活跃的信用卡用户收到一条信息，提供他们使用该卡可获得的优惠。", "此外，他提到另一组收到的信息则暗示若不使用会有惩罚。", "最后，比起可能获得的收益，顾客更容易被潜在损失所驱动。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">an experiment on customers’ behaviors</span>.\n", "<span class=\"cgry\">Firstly, </span>one group of <span class=\"cr\">inactive credit card users</span> received <span class=\"cg\">a message offering benefits</span> that they could <span class=\"cg\">gain by using the cards</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cg\">the other group</span> received <span class=\"cg\">a message implying a penalty</span> if it was not used.\n", "<span class=\"cgry\">Finally, </span>customers are more <span class=\"cg\">motivated</span> by <span class=\"cr\">a potential loss</span> than by <span class=\"cr\">the benefit</span> they could gain."], "memo": "【实验】顾客行为实验 · 不活跃卡用户 → 【收益组】收利诱信息、用卡获益 → 【惩罚组】另一组收罚则暗示 → 【损失驱动】损失驱动大于收益驱动", "memoImg": "memo/26.webp", "memoImgS": "memo/s/26.webp"}, {"num": 27, "title": "27. The History of Software 软件发展史", "url": "audio/27.%20The%20History%20of%20Software%20%E8%BD%AF%E4%BB%B6%E5%8F%91%E5%B1%95%E5%8F%B2.mp3", "dur": 24.0, "sentences": [{"i": 0, "sentence": "The lecture says that the history of the software and IT industry is fairly new but became a major new discipline.", "start": 0.1, "end": 6.875}, {"i": 1, "sentence": "Firstly, with the rapid expansion in computing and the rapid fall of computing costs and storage costs, IT has entered all areas of life.", "start": 6.825, "end": 15.425}, {"i": 2, "sentence": "Furthermore, he mentions there was a stampede according to Moore’s Law.", "start": 15.425, "end": 19.95}, {"i": 3, "sentence": "Finally, it continues to guide the development in the future.", "start": 19.95, "end": 24.0}], "translations": ["讲座指出，软件和 IT 产业的历史相当短，却已成为一门重要的新学科。", "首先，随着计算能力的快速扩张以及计算和存储成本的急剧下降，IT 已进入生活的各个领域。", "此外，他提到按照摩尔定律曾出现一波狂飙式发展。", "最后，它将继续指引未来的发展。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture says that </span><span class=\"cr\">the history of the software and IT industry</span> is fairly <span class=\"cg\">new</span> but became <span class=\"cr\">a major new discipline</span>.\n", "<span class=\"cgry\">Firstly, </span>with the <span class=\"cg\">rapid expansion</span> in <span class=\"cg\">computing</span> and the <span class=\"cg\">rapid fall</span> of <span class=\"cg\">computing costs</span> and <span class=\"cg\">storage costs</span>, IT has entered <span class=\"cg\">all areas of life</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>there was <span class=\"cg\">a stampede</span> according to <span class=\"cg\">Moore’s Law</span>.\n", "<span class=\"cgry\">Finally, </span>it continues to <span class=\"cg\">guide the development in the future</span>."], "memo": "【行业史】软件IT业史短、已成重要学科 → 【驱动因素】计算扩张、成本骤降、渗入生活 → 【抢购潮】摩尔定律背书 → 【未来指引】继续指引发展", "memoImg": "memo/27.webp", "memoImgS": "memo/s/27.webp"}, {"num": 28, "title": "28. Canned Food during the Great Depression 大萧条时期的罐装食品", "url": "audio/28.%20Canned%20Food%20during%20the%20Great%20Depression%20%E5%A4%A7%E8%90%A7%E6%9D%A1%E6%97%B6%E6%9C%9F%E7%9A%84%E7%BD%90%E8%A3%85%E9%A3%9F%E5%93%81.mp3", "dur": 26.7, "sentences": [{"i": 0, "sentence": "The lecture says that canned food entered the market during the Great Depression.", "start": 0.1, "end": 4.45}, {"i": 1, "sentence": "Firstly, refrigerators became highly popular in both cities and rural areas.", "start": 4.4, "end": 9.912}, {"i": 2, "sentence": "Furthermore, he mentions with the help of the Rural Electrification Administration, farmers could purchase appliances, leading to the rise of frozen foods.", "start": 9.912, "end": 18.95}, {"i": 3, "sentence": "Finally, it marked the beginning of modern food technology, and Americans began to see more supermarkets with freezer cases.", "start": 18.95, "end": 26.738}], "translations": ["讲座指出，罐装食品在大萧条时期进入市场。", "首先，冰箱在城市和农村地区都变得极为普及。", "此外，他提到在农村电气化管理局的帮助下，农民得以购买家电，从而带来了冷冻食品的兴起。", "最后，它标志着现代食品技术的开端，美国人开始看到更多带冷冻柜的超市。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture says that </span><span class=\"cr\">canned food </span><span class=\"cg\">entered the market</span> during <span class=\"cr\">the Great Depression</span>.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cg\">refrigerators</span> became <span class=\"cg\">highly popular</span> in both <span class=\"cg\">cities and rural areas</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>with the help of <span class=\"cg\">the Rural Electrification Administration</span>, <span class=\"cg\">farmers</span> could <span class=\"cg\">purchase appliances</span>, leading to <span class=\"cg\">the rise of frozen foods</span>.\n", "<span class=\"cgry\">Finally, </span>it marked <span class=\"cg\">the beginning of modern food technology</span>, and <span class=\"cg\">Americans</span> began to see more <span class=\"cg\">supermarkets</span> with <span class=\"cg\">freezer cases</span>."], "memo": "【大萧条背景】罐头涌入市场 → 【冰箱普及】城乡皆受欢迎 → 【农村电气化】农民购家电 · 冷冻食品兴起 → 【现代开端】现代食品技术 · 超市与冷冻柜", "memoImg": "memo/28.webp", "memoImgS": "memo/s/28.webp"}, {"num": 29, "title": "29. Roman City Planning 罗马城市规划", "url": "audio/29.%20Roman%20City%20Planning%20%E7%BD%97%E9%A9%AC%E5%9F%8E%E5%B8%82%E8%A7%84%E5%88%92.mp3", "dur": 25.9, "sentences": [{"i": 0, "sentence": "The lecture says that Rome grew in an ad hoc way.", "start": 0.1, "end": 3.725}, {"i": 1, "sentence": "Firstly, it wasn’t planned all at once but grew over time since the 8th century BC.", "start": 3.675, "end": 9.637}, {"i": 2, "sentence": "Furthermore, he mentions Romans structured cities in a very methodical way, based on military strategy and planning, and built camps in a geometric plan, usually square or rectangular.", "start": 9.637, "end": 20.975}, {"i": 3, "sentence": "Finally, ideal Roman cities are called military camp designs.", "start": 20.975, "end": 25.85}], "translations": ["讲座指出，罗马是以临时随性的方式发展起来的。", "首先，它并非一次性规划而成，而是自公元前 8 世纪起逐步发展。", "此外，他提到罗马人以非常有条理的方式构建城市，依据军事战略与规划，按几何布局建造营地，通常是方形或矩形。", "最后，理想的罗马城市被称为军营式设计。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture says that </span><span class=\"cr\">Rome</span> grew in <span class=\"cg\">an ad hoc way</span>.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cg\">it wasn’t planned all at once</span> but <span class=\"cg\">grew over time</span> since <span class=\"cg\">the 8th century BC</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>Romans structured cities in <span class=\"cg\">a very methodical way</span>, based on <span class=\"cg\">military strategy and planning</span>, and built <span class=\"cg\">camps</span> in <span class=\"cg\">a geometric plan</span>, usually <span class=\"cg\">square</span> or <span class=\"cg\">rectangular</span>.\n", "<span class=\"cgry\">Finally, </span><span class=\"cr\">ideal Roman cities</span> are called <span class=\"cr\">military camp designs</span>."], "memo": "【罗马】随意零散发展 → 【随时间增长】非一次规划、自前8世纪渐长 → 【军事化规划】有条理建城、营地方形矩形 → 【理想城市】称军事营地设计", "memoImg": "memo/29.webp", "memoImgS": "memo/s/29.webp"}, {"num": 30, "title": "30. Synthetic Biology & Genetic Engineering 合成生物学与基因工程", "url": "audio/30.%20Synthetic%20Biology%20%26%20Genetic%20Engineering%20%E5%90%88%E6%88%90%E7%94%9F%E7%89%A9%E5%AD%A6%E4%B8%8E%E5%9F%BA%E5%9B%A0%E5%B7%A5%E7%A8%8B.mp3", "dur": 25.2, "sentences": [{"i": 0, "sentence": "The lecture says that synthetic biology of the biological system is the next level of genetic engineering.", "start": 0.1, "end": 6.312}, {"i": 1, "sentence": "Firstly, 40 years ago, we were able to cut and paste DNA from one organism to another.", "start": 6.263, "end": 12.5}, {"i": 2, "sentence": "Furthermore, he mentions now we can synthesize DNA to create new organisms.", "start": 12.5, "end": 18.125}, {"i": 3, "sentence": "Finally, scientists are building a cellular factory, where you can get billions of bacteria from one bacterium.", "start": 18.125, "end": 25.188}], "translations": ["讲座指出，生物系统的合成生物学是基因工程的下一层级。", "首先，40 年前我们已能把 DNA 从一个生物体剪切粘贴到另一个。", "此外，他提到如今我们能合成 DNA 以创造新生物。", "最后，科学家正在建造一个“细胞工厂”，从一个细菌可得到数十亿个细菌。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture says that </span><span class=\"cr\">synthetic biology</span> of <span class=\"cg\">the biological system</span> is <span class=\"cg\">the next level of genetic engineering</span>.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cg\">40 years ago</span>, we were able to <span class=\"cg\">cut and paste DNA from one organism to another</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>now we can <span class=\"cg\">synthesize DNA</span> to <span class=\"cg\">create new organisms</span>.\n", "<span class=\"cgry\">Finally, </span>scientists are <span class=\"cg\">building a cellular factory</span>, where you can get <span class=\"cg\">billions of bacteria</span> from one bacterium."], "memo": "【合成生物学】生物系统 · 基因工程下一层 → 【40年前】剪切粘贴 DNA → 【现在】合成 DNA 造新生物 → 【细胞工厂】一变数十亿", "memoImg": "memo/30.webp", "memoImgS": "memo/s/30.webp"}, {"num": 31, "title": "31. Online Research 线上调研", "url": "audio/31.%20Online%20Research%20%E7%BA%BF%E4%B8%8A%E8%B0%83%E7%A0%94.mp3", "dur": 25.9, "sentences": [{"i": 0, "sentence": "The lecture is about online research.", "start": 0.1, "end": 2.962}, {"i": 1, "sentence": "The rapid growth of the Internet has changed our lives in both quality and quantity.", "start": 2.913, "end": 7.888}, {"i": 2, "sentence": "Firstly, online research is quick, less expensive, and can help us access hard-to-reach groups.", "start": 7.888, "end": 14.375}, {"i": 3, "sentence": "Furthermore, he mentions it has some drawbacks, as there is no face-to-face communication or body language.", "start": 14.375, "end": 21.15}, {"i": 4, "sentence": "Finally, the other side is not real people, so we don’t know who they are.", "start": 21.15, "end": 25.938}], "translations": ["讲座是关于线上调研的。", "互联网的快速增长在质量与数量两方面改变了我们的生活。", "首先，线上调研快捷、成本更低，还能帮助我们接触难以触及的群体。", "此外，他提到它也有一些缺点，因为没有面对面交流或肢体语言。", "最后，另一端不是真人，所以我们不知道对方是谁。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">online research</span>. ", "The <span class=\"cg\">rapid growth of the Internet</span> has <span class=\"cg\">changed our lives</span> in both <span class=\"cg\">quality and quantity</span>.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cr\">online research</span> is <span class=\"cg\">quick</span>, <span class=\"cg\">less expensive</span>, and can help us <span class=\"cg\">access hard-to-reach groups</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>it has some drawbacks, as there is <span class=\"cg\">no face-to-face communication</span> or <span class=\"cg\">body language</span>.\n", "<span class=\"cgry\">Finally, </span>the other side is not <span class=\"cg\">real people</span>, so we <span class=\"cg\">don’t know who they are</span>."], "memo": "【在线调研】互联网增长改变生活 · 质量数量并进 → 【调研优点】快、更便宜、触达难及群体 → 【交流缺失】无面对面 · 无肢体语言 → 【身份问题】非真人 · 不知其谁", "memoImg": "memo/31.webp", "memoImgS": "memo/s/31.webp"}, {"num": 32, "title": "32. The History of English 英语语言发展史", "url": "audio/32.%20The%20History%20of%20English%20%E8%8B%B1%E8%AF%AD%E8%AF%AD%E8%A8%80%E5%8F%91%E5%B1%95%E5%8F%B2.mp3", "dur": 27.1, "sentences": [{"i": 0, "sentence": "The lecture says that English is not a pure language.", "start": 0.1, "end": 3.575}, {"i": 1, "sentence": "Firstly, it has borrowed words from 350 other languages, making it a variety of many languages.", "start": 3.525, "end": 10.363}, {"i": 2, "sentence": "Furthermore, he mentions the history of the English language is closely connected to the history of the English people.", "start": 10.363, "end": 16.738}, {"i": 3, "sentence": "Finally, different periods of people have different views.", "start": 16.738, "end": 20.637}, {"i": 4, "sentence": "For example, during Shakespeare’s period, people hated those borrowed words, not original English.", "start": 20.637, "end": 27.113}], "translations": ["讲座指出，英语不是一门纯粹的语言。", "首先，它从 350 种其他语言中借用了词汇，使其成为多种语言的混合体。", "此外，他提到英语语言的历史与英国人民的历史紧密相连。", "最后，不同时期的人有不同的看法。", "例如，在莎士比亚时期，人们讨厌那些借来的词，认为它们不是原生的英语。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture says that </span><span class=\"cr\">English</span> is not <span class=\"cg\">a pure language</span>.\n", "<span class=\"cgry\">Firstly, </span>it has <span class=\"cg\">borrowed words from 350 other languages</span>, making it <span class=\"cg\">a variety of many languages</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cr\">the history of the English language</span> is <span class=\"cg\">closely connected</span> to <span class=\"cg\">the history of the English people</span>.\n", "<span class=\"cgry\">Finally, </span><span class=\"cg\">different periods of people</span> have <span class=\"cg\">different views</span>. ", "For example, during <span class=\"cg\">Shakespeare’s period</span>, people <span class=\"cg\">hated those borrowed words</span>, not original English."], "memo": "【英语】不纯 · 借词350语 · 多元集合 → 【语言史】语言史与民族史紧密相连 → 【时期观点】不同时期不同观点 → 【莎翁例】厌恶非本源借词", "memoImg": "memo/32.webp", "memoImgS": "memo/s/32.webp"}, {"num": 33, "title": "33. Food Crisis 粮食危机", "url": "audio/33.%20Food%20Crisis%20%E7%B2%AE%E9%A3%9F%E5%8D%B1%E6%9C%BA.mp3", "dur": 25.4, "sentences": [{"i": 0, "sentence": "The lecture says that people are projected to suffer from a serious food crisis for the next 30 years until 2030.", "start": 0.1, "end": 6.912}, {"i": 1, "sentence": "Firstly, we must double the yield of our production to feed a growing global population.", "start": 6.862, "end": 12.25}, {"i": 2, "sentence": "Furthermore, he mentions it is an urgent matter to elevate food production.", "start": 12.25, "end": 17.038}, {"i": 3, "sentence": "Finally, scientists have predicted an increase in food production by 30% to 50% for developing countries in the next three years.", "start": 17.038, "end": 25.363}], "translations": ["讲座指出，预计未来 30 年直至 2030 年，人们将遭遇严重的粮食危机。", "首先，我们必须将产量翻倍，才能养活不断增长的全球人口。", "此外，他提到提高粮食产量是一件紧迫之事。", "最后，科学家预测未来三年发展中国家的粮食产量将增加 30% 到 50%。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture says that </span>people are <span class=\"cg\">projected</span> to <span class=\"cr\">suffer from a serious food crisis</span> for <span class=\"cg\">the next 30 years</span> until <span class=\"cg\">2030</span>.\n", "<span class=\"cgry\">Firstly, </span>we must <span class=\"cg\">double the yield of our production</span> to <span class=\"cg\">feed a growing global population</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>it is <span class=\"cg\">an urgent matter</span> to <span class=\"cg\">elevate food production</span>.\n", "<span class=\"cgry\">Finally, </span><span class=\"cg\">scientists have predicted an increase in food production by 30% to 50%</span> for <span class=\"cg\">developing countries</span> in <span class=\"cg\">the next three years</span>."], "memo": "【粮食危机】未来30年 · 至2030 → 【产量翻倍】养活全球人口 → 【紧急事项】立即提升生产 → 【增产预测】发展中国家 · 增30-50%", "memoImg": "memo/33.webp", "memoImgS": "memo/s/33.webp"}, {"num": 34, "title": "34. Great Ideas 好想法", "url": "audio/34.%20Great%20Ideas%20%E5%A5%BD%E6%83%B3%E6%B3%95.mp3", "dur": 21.9, "sentences": [{"i": 0, "sentence": "The lecture is about how to be a successful entrepreneur.", "start": 0.1, "end": 3.538}, {"i": 1, "sentence": "Firstly, you should have great ideas, but the definition of a good idea varies depending on whom you ask.", "start": 3.487, "end": 9.825}, {"i": 2, "sentence": "Furthermore, he mentions a great idea should have several features, such as novel and unique.", "start": 9.825, "end": 15.8}, {"i": 3, "sentence": "Finally, great ideas should be productive, and it is essential for the ideas to be transformative.", "start": 15.8, "end": 21.913}], "translations": ["讲座是关于如何成为一名成功的企业家。", "首先，你应当拥有绝妙的想法，但“好想法”的定义因询问对象而异。", "此外，他提到绝妙的想法应具备若干特征，例如新颖独特。", "最后，绝妙的想法应当富有成效，而且这些想法具有变革性至关重要。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture is about </span>how to be <span class=\"cr\">a successful entrepreneur</span>.\n", "<span class=\"cgry\">Firstly, </span>you should have <span class=\"cr\">great ideas</span>, but <span class=\"cg\">the definition</span> of a good idea <span class=\"cg\">varies depending on</span> <span class=\"cg\">whom you ask</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>a great idea should have several <span class=\"cg\">features</span>, such as <span class=\"cg\">novel and unique</span>.\n", "<span class=\"cgry\">Finally, </span>great ideas should be <span class=\"cg\">productive</span>, and it is essential for the ideas to be <span class=\"cg\">transformative</span>."], "memo": "【成功企业家】需伟大想法 → 【定义差异】好想法定义因人而异 → 【新颖独特】前所未有 → 【生产力与变革】富有成效 · 具变革性", "memoImg": "memo/34.webp", "memoImgS": "memo/s/34.webp"}, {"num": 35, "title": "35. Demolition of Buildings 拆除建筑", "url": "audio/35.%20Demolition%20of%20Buildings%20%E6%8B%86%E9%99%A4%E5%BB%BA%E7%AD%91.mp3", "dur": 24.9, "sentences": [{"i": 0, "sentence": "The lecture says that architecture is more than just the built environment and a part of our culture.", "start": 0.1, "end": 5.375}, {"i": 1, "sentence": "Firstly, many old buildings with design flaws were demolished or modified.", "start": 5.325, "end": 10.438}, {"i": 2, "sentence": "Furthermore, he mentions an application of Darwin’s theory of natural selection which means buildings should adapt to the new world to survive.", "start": 10.438, "end": 18.538}, {"i": 3, "sentence": "Finally, some people criticize the demolition, as it is important to honor the cultural nuances.", "start": 18.538, "end": 24.85}], "translations": ["讲座指出，建筑不只是建成环境，也是我们文化的一部分。", "首先，许多存在设计缺陷的老建筑被拆除或改造。", "此外，他提到达尔文自然选择理论的一种应用，意味着建筑应适应新世界以求存续。", "最后，有些人批评这种拆除，因为尊重文化的细微差异很重要。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture says that </span><span class=\"cr\">architecture</span> is more than just <span class=\"cg\">the built environment</span> and <span class=\"cr\">a part of our culture</span>.\n", "<span class=\"cgry\">Firstly, </span>many <span class=\"cg\">old buildings</span> <span class=\"cg\">with design flaws</span> were <span class=\"cg\">demolished</span> or <span class=\"cg\">modified</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cg\">an application of Darwin’s theory of natural selection</span> which means buildings should <span class=\"cg\">adapt</span> to the new world to <span class=\"cg\">survive</span>.\n", "<span class=\"cgry\">Finally, </span>some people <span class=\"cg\">criticize</span> <span class=\"cr\">the demolition</span>, as it is important to <span class=\"cg\">honor the cultural nuances</span>."], "memo": "【建筑与文化】超越建筑环境 · 属于文化 → 【拆改潮】缺陷老建筑拆/改 → 【自然选择】适应新世界求生存 → 【批评拆除】尊重文化细节", "memoImg": "memo/35.webp", "memoImgS": "memo/s/35.webp"}, {"num": 36, "title": "36. Negativity Bias 消极偏差", "url": "audio/36.%20Negativity%20Bias%20%E6%B6%88%E6%9E%81%E5%81%8F%E5%B7%AE.mp3", "dur": 28.2, "sentences": [{"i": 0, "sentence": "The lecture says that negativity bias means humans pay more attention to negative emotions such as fears rather than positive emotions.", "start": 0.1, "end": 8.088}, {"i": 1, "sentence": "Firstly, we feel content and pleasant more frequently, but positive emotions are lighter and cannot be easily recalled.", "start": 8.037, "end": 15.4}, {"i": 2, "sentence": "Furthermore, he mentions negative emotions happen less frequently but are strong and intense.", "start": 15.4, "end": 21.3}, {"i": 3, "sentence": "Finally, negativity bias helps us evaluate the environment and survive when we face life-threatening issues.", "start": 21.3, "end": 28.238}], "translations": ["讲座指出，消极偏差是指人类更关注恐惧等负面情绪而非正面情绪。", "首先，我们感到满足和愉悦的频率更高，但正面情绪较轻，不易被回忆。", "此外，他提到负面情绪发生频率较低，但强烈而剧烈。", "最后，消极偏差帮助我们在面临生死攸关的问题时评估环境并生存下来。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture says that </span><span class=\"cr\">negativity bias</span> means humans pay more attention to <span class=\"cr\">negative emotions</span> such as <span class=\"cg\">fears</span> rather than <span class=\"cr\">positive emotions</span>.\n", "<span class=\"cgry\">Firstly, </span>we feel <span class=\"cg\">content and pleasant</span> more frequently, but <span class=\"cr\">positive emotions</span> are <span class=\"cg\">lighter</span> and <span class=\"cg\">cannot be easily recalled</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cr\">negative emotions</span> <span class=\"cg\">happen less frequently</span> but are <span class=\"cg\">strong and intense</span>.\n", "<span class=\"cgry\">Finally, </span><span class=\"cr\">negativity bias</span> helps us <span class=\"cg\">evaluate the environment</span> and <span class=\"cg\">survive</span> <span class=\"cg\">when we face life-threatening issues</span>."], "memo": "【消极偏差】更关注负面 · 如恐惧 → 【积极情绪】频繁但浅 · 难回忆 → 【消极情绪】少而强烈浓烈 → 【生存功能】评估环境 · 助生存", "memoImg": "memo/36.webp", "memoImgS": "memo/s/36.webp"}, {"num": 37, "title": "37. Water Recycling 水的循环利用", "url": "audio/37.%20Water%20Recycling%20%E6%B0%B4%E7%9A%84%E5%BE%AA%E7%8E%AF%E5%88%A9%E7%94%A8.mp3", "dur": 23.3, "sentences": [{"i": 0, "sentence": "The lecture is about why we need to recycle the water.", "start": 0.1, "end": 3.6}, {"i": 1, "sentence": "Firstly, we don’t generate much new water and the process of generating water is difficult.", "start": 3.55, "end": 9.137}, {"i": 2, "sentence": "Furthermore, he mentions water recycling for industrial use relies on lots of different technologies, but there is very little water recycling technology in the home.", "start": 9.137, "end": 18.525}, {"i": 3, "sentence": "Finally, people don’t think of recycling water when they use water at home.", "start": 18.525, "end": 23.262}], "translations": ["讲座是关于我们为什么需要循环利用水。", "首先，我们并不会产生多少新水，而且造水的过程很困难。", "此外，他提到工业用水的循环利用依赖许多不同技术，但家庭中的水循环技术极少。", "最后，人们在家中用水时不会想到循环利用水。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture is about </span>why we need to <span class=\"cr\">recycle the water</span>.\n", "<span class=\"cgry\">Firstly, </span>we don’t generate much <span class=\"cg\">new water</span> and <span class=\"cg\">the process of generating water</span> is <span class=\"cg\">difficult</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cg\">water recycling for industrial use</span> relies on <span class=\"cg\">lots of different technologies</span>, but there is very little water recycling technology in the <span class=\"cg\">home</span>.\n", "<span class=\"cgry\">Finally, </span>people <span class=\"cg\">don’t think of recycling water</span> when they use water at home."], "memo": "【循环用水】水稀缺需回收 → 【新水稀缺】不产新水 · 制水难 → 【工业与家庭】工业有技术 · 家庭缺 → 【家庭意识】用水不想回收", "memoImg": "memo/37.webp", "memoImgS": "memo/s/37.webp"}, {"num": 38, "title": "38. Misunderstanding of Globalization 对全球化的误解", "url": "audio/38.%20Misunderstanding%20of%20Globalization%20%E5%AF%B9%E5%85%A8%E7%90%83%E5%8C%96%E7%9A%84%E8%AF%AF%E8%A7%A3.mp3", "dur": 25.1, "sentences": [{"i": 0, "sentence": "The lecture says that globalization has often been overused and misunderstood.", "start": 0.1, "end": 5.037}, {"i": 1, "sentence": "Firstly, the starting point is to see it as a globalization process of industries and markets instead of countries.", "start": 4.987, "end": 11.738}, {"i": 2, "sentence": "Furthermore, he mentions it can be defined as the integration of economic activities across borders.", "start": 11.738, "end": 17.812}, {"i": 3, "sentence": "Finally, globalization is essential to facilitate the rising interconnectedness between countries and markets worldwide.", "start": 17.812, "end": 25.075}], "translations": ["讲座指出，全球化常被过度使用和误解。", "首先，出发点是把它看作产业和市场的全球化进程，而非国家的。", "此外，他提到它可以被定义为经济活动的跨境整合。", "最后，全球化对于促进世界各国与市场之间日益增强的互联互通至关重要。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture says that </span><span class=\"cr\">globalization</span> has often been <span class=\"cg\">overused and misunderstood</span>.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cg\">the starting point</span> is to see it as <span class=\"cg\">a globalization process of industries and markets instead of countries</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>it can be defined as <span class=\"cr\">the integration of economic activities across borders</span>.\n", "<span class=\"cgry\">Finally, </span><span class=\"cr\">globalization</span> is essential to facilitate <span class=\"cg\">the rising interconnectedness</span> <span class=\"cg\">between countries and markets</span> worldwide."], "memo": "【全球化的误解】全球化常被滥用和误解 → 【理解起点】从产业与市场而非国家来理解 → 【一体化定义】定义为跨国界经济活动一体化 → 【相互联系】促进国家与市场之间的相互联系", "memoImg": "memo/38.webp", "memoImgS": "memo/s/38.webp"}, {"num": 39, "title": "39. Inequality in Children 儿童成长的不平等", "url": "audio/39.%20Inequality%20in%20Children%20%E5%84%BF%E7%AB%A5%E6%88%90%E9%95%BF%E7%9A%84%E4%B8%8D%E5%B9%B3%E7%AD%89.mp3", "dur": 26.3, "sentences": [{"i": 0, "sentence": "The lecture is about sociology research.", "start": 0.1, "end": 3.3}, {"i": 1, "sentence": "Firstly, the capacity of well-educated parents will remain in their prosperous children, because these children have sufficient educational capacity and support since they were born.", "start": 3.25, "end": 13.05}, {"i": 2, "sentence": "Furthermore, he mentions studies show the life chance of a child has been set by five years old, which is a disturbing fact.", "start": 13.05, "end": 20.6}, {"i": 3, "sentence": "Finally, the professor cannot find obvious ways to address this deep-rooted inequality.", "start": 20.6, "end": 26.312}], "translations": ["讲座是关于社会学研究的。", "首先，受过良好教育的父母的能力会在其富足的孩子身上延续，因为这些孩子自出生起就拥有充足的教育能力和支持。", "此外，他提到研究表明，一个孩子的人生机会在五岁时就已确定，这是一个令人不安的事实。", "最后，教授找不到明显的方法来解决这一根深蒂固的不平等。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture is about </span>sociology research.\n", "<span class=\"cgry\">Firstly, </span>the <span class=\"cg\">capacity of well-educated parents</span> will remain in their <span class=\"cr\">prosperous children</span>, because these children have <span class=\"cg\">sufficient educational capacity and support</span> since they were born.\n", "<span class=\"cgry\">Furthermore, he mentions </span>studies show <span class=\"cg\">the life chance</span> of a child has been set by <span class=\"cg\">five years old</span>, which is a disturbing fact.\n", "<span class=\"cgry\">Finally, </span>the professor cannot find <span class=\"cr\">obvious ways to address this deep-rooted inequality</span>."], "memo": "【教育优势延续】教育优势会从受教育程度高的父母延续到成功子女 → 【差距成因】出生起的教育支持造成差距 → 【事实】五岁时人生机会已基本定型 → 【困境】根深蒂固的不平等难以解决", "memoImg": "memo/39.webp", "memoImgS": "memo/s/39.webp"}, {"num": 40, "title": "40. The Industrial Revolution 工业革命", "url": "audio/40.%20The%20Industrial%20Revolution%20%E5%B7%A5%E4%B8%9A%E9%9D%A9%E5%91%BD.mp3", "dur": 26.0, "sentences": [{"i": 0, "sentence": "The lecture is about the idea of the Industrial Revolution.", "start": 0.1, "end": 3.862}, {"i": 1, "sentence": "Firstly, the idea was the creation of machines, primarily in the textile and mining industries.", "start": 3.812, "end": 10.2}, {"i": 2, "sentence": "Furthermore, he mentions past analyses viewed industrialization as a situation of winners and losers, which has been rejected.", "start": 10.2, "end": 18.062}, {"i": 3, "sentence": "Finally, it was the intensification of forms of production that were already there, its rapid rise tied to traditional forms of production.", "start": 18.062, "end": 26.0}], "translations": ["讲座是关于工业革命这一概念。", "首先，这一概念指的是机器的创造，主要在纺织和采矿行业。", "此外，他提到以往的分析将工业化视为赢家与输家的局面，这种观点已被否定。", "最后，它是对已有生产形式的强化，其迅速崛起与传统的生产形式相关联。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">the idea of the Industrial Revolution</span>.\n", "<span class=\"cgry\">Firstly, </span>the idea was <span class=\"cg\">the creation of machines</span>, primarily in <span class=\"cg\">the textile and mining industries</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>past analyses viewed <span class=\"cg\">industrialization</span> as <span class=\"cg\">a situation of winners and losers</span>, which has been <span class=\"cg\">rejected</span>.\n", "<span class=\"cgry\">Finally, </span>it was <span class=\"cr\">the intensification of forms of production that were already there</span>, its <span class=\"cg\">rapid rise</span> tied to <span class=\"cg\">traditional forms of production</span>."], "memo": "【工业革命概念】1950-60s 观念 → 【机器创造】纺织采矿为主 → 【旧观否定】赢家输家论被否 → 【本质新解】既有生产强化 · 传统相关", "memoImg": "memo/40.webp", "memoImgS": "memo/s/40.webp"}, {"num": 41, "title": "41. Organization Studies 组织研究", "url": "audio/41.%20Organization%20Studies%20%E7%BB%84%E7%BB%87%E7%A0%94%E7%A9%B6.mp3", "dur": 27.4, "sentences": [{"i": 0, "sentence": "The lecture is about organization studies and how to appreciate them.", "start": 0.1, "end": 4.312}, {"i": 1, "sentence": "Firstly, organization studies are about a whole family of disciplines, such as social science, psychology, sociology, history, and cultural studies.", "start": 4.263, "end": 14.738}, {"i": 2, "sentence": "Furthermore, he mentions the speaker enjoys doing organization studies because of their broad range and breadth.", "start": 14.738, "end": 21.425}, {"i": 3, "sentence": "Finally, organization studies have taught him liberating ideas without disciplinary divisions.", "start": 21.425, "end": 27.425}], "translations": ["讲座是关于组织研究以及如何欣赏它们。", "首先，组织研究涉及一整个学科家族，如社会科学、心理学、社会学、历史学和文化研究。", "此外，他提到讲者很享受做组织研究，因为其范围广阔。", "最后，组织研究教会他一些具有解放性的理念，而不受学科划分的束缚。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">organization studies</span> and how to <span class=\"cg\">appreciate them</span>.\n", "<span class=\"cgry\">Firstly, </span>organization studies are about <span class=\"cg\">a whole family of disciplines</span>, such as <span class=\"cg\">social science</span>, <span class=\"cg\">psychology</span>, <span class=\"cg\">sociology</span>, <span class=\"cg\">history</span>, and <span class=\"cg\">cultural studies</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>the speaker <span class=\"cg\">enjoys doing organization studies</span> because of their <span class=\"cg\">broad range and breadth</span>.\n", "<span class=\"cgry\">Finally, </span>organization studies have taught him <span class=\"cg\">liberating ideas without disciplinary divisions</span>."], "memo": "【组织研究】组织研究及其理解方式 → 【构成】涵盖一整套学科 → 【学科广度】广度让演讲者着迷 → 【解放性思维】带来打破学科界限的解放性思维", "memoImg": "memo/41.webp", "memoImgS": "memo/s/41.webp"}, {"num": 42, "title": "42. Australian Immigration 澳大利亚移民", "url": "audio/42.%20Australian%20Immigration%20%E6%BE%B3%E5%A4%A7%E5%88%A9%E4%BA%9A%E7%A7%BB%E6%B0%91.mp3", "dur": 34.4, "sentences": [{"i": 0, "sentence": "The lecture is about Australia.", "start": 0.1, "end": 2.513}, {"i": 1, "sentence": "Firstly, the ancestors of the present indigenous people were the first inhabitants in Australia about 43000 years before present.", "start": 2.462, "end": 10.4}, {"i": 2, "sentence": "Furthermore, he mentions the Aboriginal community continued to develop, diversify and settle.", "start": 10.4, "end": 16.75}, {"i": 3, "sentence": "In the 1970s and 1980s, refugees migrated to Australia; Australia adopted the multiculturalism policy.", "start": 16.75, "end": 24.825}, {"i": 4, "sentence": "Finally, in 2004-2005, Australia accepted new settlers, increasing the immigrant population from Asia who moved to Sydney.", "start": 24.825, "end": 34.35}], "translations": ["讲座是关于澳大利亚的。", "首先，现今原住民的祖先是最早在约 4.3 万年前居住于澳大利亚的人。", "此外，他提到原住民社群持续发展、多样化和定居。", "在 1970 和 1980 年代，难民移居澳大利亚；澳大利亚实行了多元文化政策。", "最后，在 2004 至 2005 年，澳大利亚接纳了新定居者，使迁往悉尼的亚洲移民人口增加。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">Australia</span>.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cg\">the ancestors of the present indigenous people</span> were <span class=\"cg\">the first inhabitants</span> in Australia about <span class=\"cg\">43000 years before present</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cg\">the Aboriginal community</span> continued to <span class=\"cg\">develop</span>, <span class=\"cg\">diversify</span> and <span class=\"cg\">settle</span>. ", "In <span class=\"cg\">the 1970s and 1980s</span>, <span class=\"cg\">refugees</span> migrated to Australia; Australia adopted <span class=\"cg\">the multiculturalism policy</span>.\n", "<span class=\"cgry\">Finally, </span>in <span class=\"cg\">2004-2005</span>, Australia accepted <span class=\"cg\">new settlers</span>, increasing <span class=\"cr\">the immigrant population</span> from <span class=\"cg\">Asia</span> who moved to <span class=\"cg\">Sydney</span>."], "memo": "【澳大利亚】澳大利亚 → 【起源】4.3万年前土著祖先最早定居 → 【原住民发展】发展、多样化并定居 → 【多元文化】70—80年代难民迁入、实行多元文化政策 → 【移民增长】2004—2005年新移民增加，多来自亚洲前往悉尼", "memoImg": "memo/42.webp", "memoImgS": "memo/s/42.webp"}, {"num": 43, "title": "43. Stock Market and Modern Business 股票市场与现代企业", "url": "audio/43.%20Stock%20Market%20and%20Modern%20Business%20%E8%82%A1%E7%A5%A8%E5%B8%82%E5%9C%BA%E4%B8%8E%E7%8E%B0%E4%BB%A3%E4%BC%81%E4%B8%9A.mp3", "dur": 25.5, "sentences": [{"i": 0, "sentence": "The lecture is about the different uses of the stock market before and after.", "start": 0.1, "end": 4.562}, {"i": 1, "sentence": "Firstly, in the 18th century, manufacturing companies entered the market.", "start": 4.513, "end": 9.562}, {"i": 2, "sentence": "Furthermore, he mentions modern companies, including Apple, Google, and Facebook, use stocks differently.", "start": 9.562, "end": 17.15}, {"i": 3, "sentence": "Finally, traditional companies used stocks to raise money and input money into companies, while modern companies used stocks to output money.", "start": 17.15, "end": 25.538}], "translations": ["讲座是关于股票市场在此前与此后不同的用途。", "首先，在 18 世纪，制造企业进入市场。", "此外，他提到包括苹果、谷歌和脸书在内的现代公司，以不同的方式使用股票。", "最后，传统公司用股票筹集资金并把资金投入公司，而现代公司用股票把资金输出。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cg\">the different uses of</span> <span class=\"cr\">the stock market</span> <span class=\"cg\">before and after</span>.\n", "<span class=\"cgry\">Firstly, </span>in the 18th century, <span class=\"cg\">manufacturing companies</span> entered the market.\n", "<span class=\"cgry\">Furthermore, he mentions </span><span class=\"cg\">modern companies</span>, including Apple, Google, and Facebook, <span class=\"cr\">use stocks differently</span>.\n", "<span class=\"cgry\">Finally, </span><span class=\"cg\">traditional companies</span> used stocks to <span class=\"cg\">raise money</span> and <span class=\"cg\">input money into companies</span>, while <span class=\"cg\">modern companies</span> used stocks to <span class=\"cg\">output money</span>."], "memo": "【股市用途变迁】股票市场用途的前后变化 → 【18世纪】制造企业进入市场 → 【现代公司】苹果、谷歌等用股方式不同 → 【传统与现代】传统公司用股票筹资投入，现代公司用股票输出资金", "memoImg": "memo/43.webp", "memoImgS": "memo/s/43.webp"}, {"num": 44, "title": "44. A Luxury Brand 奢侈品", "url": "audio/44.%20A%20Luxury%20Brand%20%E5%A5%A2%E4%BE%88%E5%93%81.mp3", "dur": 23.9, "sentences": [{"i": 0, "sentence": "The lecture is about what makes a luxury brand and how we distinguish it.", "start": 0.1, "end": 4.25}, {"i": 1, "sentence": "The speaker first provides information on the standard business response.", "start": 4.2, "end": 8.588}, {"i": 2, "sentence": "Luxury brands are exclusive and expensive, but not always in reality.", "start": 8.588, "end": 13.575}, {"i": 3, "sentence": "Furthermore, he mentions luxury examples such as two televisions in Australia and Starbucks in China.", "start": 13.575, "end": 19.975}, {"i": 4, "sentence": "In conclusion, the real answer depends on whom you talk to.", "start": 19.975, "end": 23.95}], "translations": ["讲座是关于什么造就了奢侈品牌，以及我们如何区分它。", "讲者首先谈到标准的商业回答。", "奢侈品牌具有排他性且昂贵，但现实并不总是如此。", "此外，他提到奢侈品案例，如澳大利亚的两台电视机和中国的星巴克。", "总之，真正的答案取决于你和谁交谈。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">what makes a luxury brand</span> and <span class=\"cg\">how we distinguish it</span>.\n", "<span class=\"cgry\">The speaker first provides information on </span><span class=\"cg\">the standard business response</span>. ", "Luxury brands are <span class=\"cg\">exclusive</span> and <span class=\"cg\">expensive</span>, but not always <span class=\"cg\">in reality</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>luxury examples such as two televisions in Australia and Starbucks in China.\n", "<span class=\"cgry\">In conclusion, </span><span class=\"cg\">the real answer depends on whom you talk to</span>."], "memo": "【奢侈品】定义与区分 → 【商业标准】稀缺且昂贵、现实未必 → 【例子】澳洲两台电视、中国星巴克 → 【答案】因人而异", "memoImg": "memo/44.webp", "memoImgS": "memo/s/44.webp"}, {"num": 45, "title": "45. The Stability of Mood 情绪稳定", "url": "audio/45.%20The%20Stability%20of%20Mood%20%E6%83%85%E7%BB%AA%E7%A8%B3%E5%AE%9A.mp3", "dur": 23.8, "sentences": [{"i": 0, "sentence": "The lecture is about the stability of mood.", "start": 0.1, "end": 3.025}, {"i": 1, "sentence": "The speaker first provides information on how moods may vary among different people.", "start": 2.975, "end": 7.888}, {"i": 2, "sentence": "Some people easily get intense and their moods are like riding a roller coaster, while others may be loose.", "start": 7.888, "end": 14.175}, {"i": 3, "sentence": "Furthermore, he mentions that the secret of happiness is mild contentment.", "start": 14.175, "end": 18.825}, {"i": 4, "sentence": "In conclusion, we should find a balance between intense and loose emotions.", "start": 18.825, "end": 23.837}], "translations": ["讲座是关于情绪的稳定性。", "讲者首先谈到不同人的情绪可能如何变化。", "有些人容易情绪激烈，情绪像坐过山车，而另一些人则较为松弛。", "此外，他提到幸福的秘诀是温和的满足。", "总之，我们应在激烈与松弛的情绪之间找到平衡。"], "diff": "中等", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">the stability of mood</span>.\n", "<span class=\"cgry\">The speaker first provides information on </span>how moods may <span class=\"cg\">vary among different people</span>. ", "Some people <span class=\"cg\">easily get intense</span> and their moods are like <span class=\"cg\">riding a roller coaster</span>, while others may be <span class=\"cg\">loose</span>.\n", "<span class=\"cgry\">Furthermore, he mentions that </span><span class=\"cg\">the secret of happiness</span> is <span class=\"cg\">mild contentment</span>.\n", "<span class=\"cgry\">In conclusion, </span>we should find <span class=\"cg\">a balance between intense and loose emotions</span>."], "memo": "【情绪稳定】因人而异 → 【两类人】易激烈如过山车、或一直放松 → 【幸福秘诀】适度满足 → 【建议】激烈与放松间求平衡", "memoImg": "memo/45.webp", "memoImgS": "memo/s/45.webp"}, {"num": 46, "title": "46. Women Leadership 领导力", "url": "audio/46.%20Women%20Leadership%20%E9%A2%86%E5%AF%BC%E5%8A%9B.mp3", "dur": 22.6, "sentences": [{"i": 0, "sentence": "The lecture is about leadership, especially women's leadership.", "start": 0.1, "end": 4.138}, {"i": 1, "sentence": "The speaker first provides information on leadership as a spectrum, and it can be split into two forms, out in front and behind the scenes.", "start": 4.088, "end": 12.137}, {"i": 2, "sentence": "Furthermore, he mentions that in the past, men were out in front while women were behind the scenes.", "start": 12.137, "end": 18.3}, {"i": 3, "sentence": "In conclusion, nowadays women are beginning to come out in front.", "start": 18.3, "end": 22.562}], "translations": ["讲座是关于领导力，尤其是女性领导力。", "讲者首先谈到领导力是一个光谱，可分为两种形式：台前和幕后。", "此外，他提到过去男性在台前，而女性在幕后。", "总之，如今女性正开始走向台前。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cg\">leadership</span>, especially <span class=\"cr\">women's leadership</span>.\n", "<span class=\"cgry\">The speaker first provides information on </span>leadership as <span class=\"cg\">a spectrum</span>, and it can be split into <span class=\"cg\">two forms</span>, <span class=\"cg\">out in front</span> and <span class=\"cg\">behind the scenes</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>that in <span class=\"cg\">the past</span>, <span class=\"cg\">men were out in front</span> while <span class=\"cg\">women were behind the scenes</span>.\n", "<span class=\"cgry\">In conclusion, </span><span class=\"cg\">nowadays women are beginning to come out in front</span>."], "memo": "【女性领导力】领导风格光谱 → 【两形式】台前与幕后 → 【过去】男主台前、女主幕后 → 【现在】女性开始走向台前", "memoImg": "memo/46.webp", "memoImgS": "memo/s/46.webp"}, {"num": 47, "title": "47. Social Difficulties in Children 儿童的社交困难", "url": "audio/47.%20Social%20Difficulties%20in%20Children%20%E5%84%BF%E7%AB%A5%E7%9A%84%E7%A4%BE%E4%BA%A4%E5%9B%B0%E9%9A%BE.mp3", "dur": 25.4, "sentences": [{"i": 0, "sentence": "The lecture is about children facing social difficulties with particular risks.", "start": 0.1, "end": 4.925}, {"i": 1, "sentence": "Firstly, an experiment in a high school asks students to be a movie director and choose their story structure.", "start": 4.875, "end": 11.287}, {"i": 2, "sentence": "Furthermore, he mentions that they worked with each other, which involved lots of different skills, and the movies they had made were actually cool.", "start": 11.287, "end": 19.238}, {"i": 3, "sentence": "In conclusion, the intervention effect could improve their self-regulation and critical thinking skills.", "start": 19.238, "end": 25.363}], "translations": ["讲座是关于面临社交困难、尤其是有特定风险的儿童。", "首先，一所高中开展实验，要求学生担任电影导演并选择自己的故事结构。", "此外，他提到他们彼此合作，涉及许多不同技能，他们拍出的电影实际上很棒。", "总之，这种干预有助于提升他们的自我调节和批判性思维能力。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">children</span> facing <span class=\"cr\">social difficulties</span> with <span class=\"cg\">particular risks</span>.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cg\">an experiment in a high school</span> asks students to be <span class=\"cg\">a movie director</span> and <span class=\"cg\">choose their story structure</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>that they <span class=\"cg\">worked with each other</span>, which <span class=\"cg\">involved lots of different skills</span>, and <span class=\"cg\">the movies they had made were actually cool</span>.\n", "<span class=\"cgry\">In conclusion, </span><span class=\"cg\">the intervention effect</span> could <span class=\"cg\">improve their self-regulation and critical thinking skills</span>."], "memo": "【儿童社交困难】带特定风险 → 【实验】高中生任电影导演、选故事结构 → 【合作拍片】相互合作、多种技能、电影很酷 → 【效果】提升自我调节与批判性思维", "memoImg": "memo/47.webp", "memoImgS": "memo/s/47.webp"}, {"num": 48, "title": "48. English Language in Poem 诗歌语言", "url": "audio/48.%20English%20Language%20in%20Poem%20%E8%AF%97%E6%AD%8C%E8%AF%AD%E8%A8%80.mp3", "dur": 22.6, "sentences": [{"i": 0, "sentence": "The lecture is about the literature in the poem.", "start": 0.1, "end": 3.025}, {"i": 1, "sentence": "Firstly, people find it difficult to understand the English language in poems and poetry.", "start": 2.975, "end": 8.562}, {"i": 2, "sentence": "Furthermore, he mentions that readers have a feeling of frustration, and it is hard for them to enjoy poetry due to the use of literary expressions.", "start": 8.562, "end": 17.15}, {"i": 3, "sentence": "In conclusion, we should learn to simply enjoy it and gain more knowledge about literature.", "start": 17.15, "end": 22.575}], "translations": ["讲座是关于诗歌中的文学。", "首先，人们觉得诗歌和诗中的英语语言难以理解。", "此外，他提到读者会感到挫败，而且由于文学表达的使用，他们很难欣赏诗歌。", "总之，我们应当学会单纯地享受它，并获取更多文学知识。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">the literature in the poem</span>.\n", "<span class=\"cgry\">Firstly, </span>people find it <span class=\"cg\">difficult to understand the English language in poems and poetry</span>.\n", "<span class=\"cgry\">Furthermore, he mentions that </span>readers have a feeling of <span class=\"cg\">frustration</span>, and it is <span class=\"cg\">hard for them to enjoy poetry</span> due to <span class=\"cg\">the use of literary expressions</span>.\n", "<span class=\"cgry\">In conclusion, </span>we should <span class=\"cg\">learn to simply enjoy it</span> and gain <span class=\"cg\">more knowledge about literature</span>."], "memo": "【诗歌语言】文学表达难懂 → 【读者】沮丧、难享受 → 【文学表达】文学表达的使用 → 【建议】简单享受、增文学知识", "memoImg": "memo/48.webp", "memoImgS": "memo/s/48.webp"}, {"num": 49, "title": "49. Paper Rejection 论文遭拒", "url": "audio/49.%20Paper%20Rejection%20%E8%AE%BA%E6%96%87%E9%81%AD%E6%8B%92.mp3", "dur": 22.6, "sentences": [{"i": 0, "sentence": "The lecture is about advice on paper rejection and publishing for young scientists.", "start": 0.1, "end": 5.263}, {"i": 1, "sentence": "The speaker first provides information on why the chance of getting a paper published is becoming smaller and smaller.", "start": 5.213, "end": 11.537}, {"i": 2, "sentence": "Furthermore, he mentions that rejections will lead to a better result and be good for the career path.", "start": 11.537, "end": 17.3}, {"i": 3, "sentence": "In conclusion, the speaker talked about how to attract and engage young researchers.", "start": 17.3, "end": 22.587}], "translations": ["讲座是关于给年轻科学家的论文被拒与发表方面的建议。", "讲者首先谈到为什么论文发表的机会变得越来越小。", "此外，他提到拒稿会带来更好的结果，对职业发展也有好处。", "总之，讲者谈到了如何吸引并留住年轻研究者。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cg\">advice on </span><span class=\"cr\">paper rejection</span> <span class=\"cg\">and</span> <span class=\"cr\">publishing</span> for <span class=\"cr\">young scientists</span>.\n", "<span class=\"cgry\">The speaker first provides information on </span>why <span class=\"cg\">the chance of getting a paper published</span> is becoming <span class=\"cg\">smaller and smaller</span>.\n", "<span class=\"cgry\">Furthermore, he mentions that </span>rejections will lead to <span class=\"cg\">a better result</span> and be <span class=\"cg\">good for the career path</span>.\n", "<span class=\"cgry\">In conclusion, </span>the speaker talked about how to <span class=\"cg\">attract and engage young researchers</span>."], "memo": "【论文退稿】青年科学家发表建议 → 【现状】发表机会越来越小 → 【退稿有益】带来更好结果、利好职业路径 → 【吸引青年】研究者参与研究", "memoImg": "memo/49.webp", "memoImgS": "memo/s/49.webp"}, {"num": 50, "title": "50. Bees’ Genes and Darwin 蜜蜂基因与达尔文", "url": "audio/50.%20Bees%E2%80%99%20Genes%20and%20Darwin%20%E8%9C%9C%E8%9C%82%E5%9F%BA%E5%9B%A0%E4%B8%8E%E8%BE%BE%E5%B0%94%E6%96%87.mp3", "dur": 22.3, "sentences": [{"i": 0, "sentence": "The lecture is about the genes of bees and their evolution.", "start": 0.1, "end": 3.775}, {"i": 1, "sentence": "The speaker first provides information on worker bees attack intruders and then die.", "start": 3.725, "end": 8.9}, {"i": 2, "sentence": "Furthermore, he mentions that worker bees sacrifice their lives to protect the next generation.", "start": 8.9, "end": 14.738}, {"i": 3, "sentence": "In conclusion, Darwin realized that by improving the reproductivity of the queen bees, the bees' genes could be saved.", "start": 14.738, "end": 22.262}], "translations": ["讲座是关于蜜蜂的基因及其演化。", "讲者首先谈到工蜂攻击入侵者后会死去。", "此外，他提到工蜂牺牲自己的生命来保护下一代。", "总之，达尔文意识到，通过提高蜂王的繁殖力，蜜蜂的基因得以保存。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">the genes of bees and their evolution</span>.\n", "<span class=\"cgry\">The speaker first provides information on </span><span class=\"cg\">worker bees attack intruders and then die</span>.\n", "<span class=\"cgry\">Furthermore, he mentions that </span>worker bees <span class=\"cg\">sacrifice their lives to protect the next generation</span>.\n", "<span class=\"cgry\">In conclusion, </span><span class=\"cg\">Darwin</span> realized that by <span class=\"cg\">improving the reproductivity of the queen bees</span>, <span class=\"cg\">the bees’ genes could be saved</span>."], "memo": "【蜜蜂基因】与进化 → 【蜂巢保卫战】工蜂攻击入侵者后死亡 → 【牺牲精神】牺牲生命保护下一代 → 【达尔文】提高蜂后繁殖力，拯救蜜蜂基因", "memoImg": "memo/50.webp", "memoImgS": "memo/s/50.webp"}, {"num": 51, "title": "51. Machines Increase Unemployment 机器增加失业率", "url": "audio/51.%20Machines%20Increase%20Unemployment%20%E6%9C%BA%E5%99%A8%E5%A2%9E%E5%8A%A0%E5%A4%B1%E4%B8%9A%E7%8E%87.mp3", "dur": 27.2, "sentences": [{"i": 0, "sentence": "The lecture says that the development of machines is a sign of the development of the country.", "start": 0.1, "end": 4.987}, {"i": 1, "sentence": "Firstly, machines are advanced with face recognition or language processing techniques.", "start": 4.938, "end": 10.65}, {"i": 2, "sentence": "Furthermore, he mentions life is dependent on machines and people make a profit, but as machines continue to improve, unemployment and redundancies will rise.", "start": 10.65, "end": 20.275}, {"i": 3, "sentence": "In conclusion, we must create more jobs, or people will lose jobs and the unemployment rate will increase.", "start": 20.275, "end": 27.2}], "translations": ["讲座指出，机器的发展是一个国家发展的标志。", "首先，机器借助人脸识别或语言处理技术而不断进步。", "此外，他提到生活依赖机器，人们从中获利，但随着机器不断改进，失业和裁员将会上升。", "总之，我们必须创造更多就业，否则人们会失去工作，失业率将会上升。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture says that </span><span class=\"cr\">the development of machines</span> is <span class=\"cg\">a sign of the development of the country</span>.\n", "<span class=\"cgry\">Firstly, </span>machines are <span class=\"cg\">advanced</span> with <span class=\"cg\">face recognition</span> or <span class=\"cg\">language processing techniques</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>life is <span class=\"cg\">dependent on machines</span> and people <span class=\"cg\">make a profit</span>, but as machines <span class=\"cg\">continue to improve</span>, <span class=\"cg\">unemployment and redundancies will rise</span>.\n", "<span class=\"cgry\">In conclusion, </span>we must <span class=\"cg\">create more jobs</span>, or people will <span class=\"cg\">lose jobs</span> and the <span class=\"cr\">unemployment rate will increase</span>."], "memo": "【机器发展】与失业率 → 【技术】人脸识别、语言处理 → 【依赖获利】生活靠机器、从中获利 → 【隐忧】机器进步、失业裁员上升 → 【对策】创造更多工作", "memoImg": "memo/51.webp", "memoImgS": "memo/s/51.webp"}, {"num": 52, "title": "52. Symmetry in Mathematics 数学中的对称性", "url": "audio/52.%20Symmetry%20in%20Mathematics%20%E6%95%B0%E5%AD%A6%E4%B8%AD%E7%9A%84%E5%AF%B9%E7%A7%B0%E6%80%A7.mp3", "dur": 26.1, "sentences": [{"i": 0, "sentence": "The lecture is about the historical objects in museums and their mathematical significance.", "start": 0.1, "end": 5.312}, {"i": 1, "sentence": "Firstly, the stones discovered in Scotland 5000 years ago are the first examples of humans exploring the concept of symmetry.", "start": 5.263, "end": 13.2}, {"i": 2, "sentence": "Furthermore, he mentions we do not know what symmetry is in nature or what these stones are for.", "start": 13.2, "end": 19.375}, {"i": 3, "sentence": "In conclusion, maybe they were starting to be mathematicians, making mathematical objects for joy and beauty.", "start": 19.375, "end": 26.125}], "translations": ["讲座是关于博物馆里的历史物件及其数学意义。", "首先，5000 年前在苏格兰发现的石头，是人类探索对称概念的早期例证。", "此外，他提到我们不知道自然界中的对称是什么，也不知道这些石头用途何在。", "总之，也许他们正开始成为数学家，为快乐和美感制作数学物件。"], "diff": "困难", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">the historical objects in museums</span> and their <span class=\"cr\">mathematical significance</span>.\n", "<span class=\"cgry\">Firstly, </span><span class=\"cg\">the stones discovered in Scotland</span> <span class=\"cg\">5000 years ago</span> are <span class=\"cg\">the first examples</span> <span class=\"cg\">of humans exploring the concept of symmetry</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>we do not know <span class=\"cg\">what symmetry is in nature</span> or <span class=\"cg\">what these stones are for</span>.\n", "<span class=\"cgry\">In conclusion, </span>maybe they were starting to be <span class=\"cg\">mathematicians</span>, making <span class=\"cg\">mathematical objects for joy and beauty</span>."], "memo": "【文物数学意义】博物馆历史文物 → 【石阵】苏格兰5000年前石头、探索对称的最早例证 → 【疑问】对称是什么、石头何用 → 【猜想】初为数学家、为乐趣与美创造数学物品", "memoImg": "memo/52.webp", "memoImgS": "memo/s/52.webp"}, {"num": 53, "title": "53. Hook 议论文开篇", "url": "audio/53.%20Hook%20%E8%AE%AE%E8%AE%BA%E6%96%87%E5%BC%80%E7%AF%87.mp3", "dur": 26.0, "sentences": [{"i": 0, "sentence": "The lecture is about the hook for writing a persuasive essay.", "start": 0.1, "end": 3.775}, {"i": 1, "sentence": "Firstly, a hook grabs the reader’s attention on the controversial issue.", "start": 3.725, "end": 8.3}, {"i": 2, "sentence": "Furthermore, he mentions a hook is in the first paragraph with four or five sentences in length.", "start": 8.3, "end": 14.387}, {"i": 3, "sentence": "In conclusion, hooks provoke emotional interest by using statistics and facts, presenting hypothetical or worst-case scenarios, and using strong wording to show the urgency of the addressed topic.", "start": 14.387, "end": 26.025}], "translations": ["讲座是关于议论文写作中的“钩子”。", "首先，钩子能就争议性议题抓住读者的注意力。", "此外，他提到钩子位于第一段，长度约四到五句。", "总之，钩子通过使用统计数据和事实、呈现假设性或最坏情景、以及用强烈措辞显示所论议题的紧迫性，来引发情感上的兴趣。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">the hook</span> for <span class=\"cg\">writing a persuasive essay</span>.\n", "<span class=\"cgry\">Firstly, </span>a hook grabs <span class=\"cg\">the reader’s attention</span> on the controversial issue.\n", "<span class=\"cgry\">Furthermore, he mentions </span>a hook is in <span class=\"cg\">the first paragraph</span> with <span class=\"cg\">four or five sentences in length</span>.\n", "<span class=\"cgry\">In conclusion, </span>hooks provoke <span class=\"cg\">emotional interest</span> by using <span class=\"cg\">statistics and facts</span>, presenting <span class=\"cg\">hypothetical or worst-case scenarios</span>, and using <span class=\"cg\">strong wording</span> to show <span class=\"cg\">the urgency of the addressed topic</span>."], "memo": "【议论文钩子】开篇之钩 → 【作用】抓住读者对争议话题的注意力 → 【位置长度】首段、四五句 → 【手法】数据事实、假设或最坏情境、强硬措辞显紧迫性", "memoImg": "memo/53.webp", "memoImgS": "memo/s/53.webp"}, {"num": 54, "title": "54. Product-focused Market 卖方市场和买方市场", "url": "audio/54.%20Product-focused%20Market%20%E5%8D%96%E6%96%B9%E5%B8%82%E5%9C%BA%E5%92%8C%E4%B9%B0%E6%96%B9%E5%B8%82%E5%9C%BA.mp3", "dur": 24.0, "sentences": [{"i": 0, "sentence": "The lecture is about the seller's market, where marketing tends to be a product-focused market.", "start": 0.1, "end": 5.225}, {"i": 1, "sentence": "Firstly, you should develop the product, reduce costs and increase sales volume.", "start": 5.175, "end": 10.825}, {"i": 2, "sentence": "Furthermore, he mentions that profitability is tied to market share, because the bigger your market share and the lower the product cost, the more your revenues.", "start": 10.825, "end": 20.05}, {"i": 3, "sentence": "In conclusion, market share is your business objective.", "start": 20.05, "end": 24.038}], "translations": ["讲座是关于卖方市场，其中营销往往是以产品为中心的市场。", "首先，你应当开发产品、降低成本并提高销量。", "此外，他提到盈利能力与市场份额挂钩，因为市场份额越大、产品成本越低，你的收入就越多。", "总之，市场份额就是你的商业目标。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cg\">the seller's market</span>, where <span class=\"cg\">marketing</span> tends to be <span class=\"cr\">a product-focused market</span>.\n", "<span class=\"cgry\">Firstly, </span>you should <span class=\"cg\">develop the product</span>, <span class=\"cg\">reduce costs</span> and <span class=\"cg\">increase sales volume</span>.\n", "<span class=\"cgry\">Furthermore, he mentions that </span><span class=\"cg\">profitability</span> is tied to <span class=\"cg\">market share</span>, because <span class=\"cg\">the bigger your market share</span> and <span class=\"cg\">the lower the product cost</span>, <span class=\"cg\">the more your revenues</span>.\n", "<span class=\"cgry\">In conclusion, </span>market share is your <span class=\"cg\">business objective</span>."], "memo": "【卖方市场】营销趋向产品导向 → 【策略】开发产品、降成本、增销量 → 【利润逻辑】份额越大成本越低收入越多 → 【市场份额目标】市场份额是商业目标", "memoImg": "memo/54.webp", "memoImgS": "memo/s/54.webp"}, {"num": 55, "title": "55. Modern Poetry 现代诗歌", "url": "audio/55.%20Modern%20Poetry%20%E7%8E%B0%E4%BB%A3%E8%AF%97%E6%AD%8C.mp3", "dur": 22.8, "sentences": [{"i": 0, "sentence": "The lecture is about an introduction to the literature of a period and modern poetry.", "start": 0.1, "end": 5.0}, {"i": 1, "sentence": "Firstly, we will study several poets, which require close reading.", "start": 4.95, "end": 9.625}, {"i": 2, "sentence": "Furthermore, he mentions developing a sense of modernism, which is one of the richest fields of English language writing.", "start": 9.625, "end": 16.4}, {"i": 3, "sentence": "Finally, we will be introduced to poems and try to enjoy them, be puzzled by them, and learn from them.", "start": 16.4, "end": 22.837}], "translations": ["讲座是关于某一时期文学和现代诗歌的介绍。", "首先，我们将研究几位诗人，这需要细读。", "此外，他提到要培养现代主义意识，这是英语写作最丰富的领域之一。", "最后，我们将接触诗歌，试着享受它们、被它们困惑，并从中学习。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cg\">an introduction</span> to <span class=\"cg\">the literature of a period</span> and <span class=\"cr\">modern poetry</span>.\n", "<span class=\"cgry\">Firstly, </span>we will study <span class=\"cg\">several poets</span>, which require <span class=\"cg\">close reading</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>developing <span class=\"cg\">a sense of modernism</span>, which is <span class=\"cg\">one of the richest fields</span> of <span class=\"cg\">English language writing</span>.\n", "<span class=\"cgry\">Finally, </span>we will be introduced to <span class=\"cg\">poems</span> and try to <span class=\"cg\">enjoy them</span>, <span class=\"cg\">be puzzled by them</span>, and <span class=\"cg\">learn from them</span>."], "memo": "【现代诗歌】导论课 → 【研读诗人】需精读 → 【现代主义】最富领域 → 【研习态度】欣赏·困惑·学习", "memoImg": "memo/55.webp", "memoImgS": "memo/s/55.webp"}, {"num": 56, "title": "56. Melatonin 褪黑素", "url": "audio/56.%20Melatonin%20%E8%A4%AA%E9%BB%91%E7%B4%A0.mp3", "dur": 25.5, "sentences": [{"i": 0, "sentence": "The lecture is about melatonin.", "start": 0.1, "end": 2.6}, {"i": 1, "sentence": "Firstly, it is produced in the pineal gland, the size of a pea, in the brain.", "start": 2.55, "end": 8.0}, {"i": 2, "sentence": "Furthermore, he mentions this hormone has a rhythm and is the opposite of cortisol.", "start": 8.0, "end": 13.238}, {"i": 3, "sentence": "It peaks at night, called the darkness hormone.", "start": 13.238, "end": 16.65}, {"i": 4, "sentence": "In conclusion, melatonin occurs at night and prepares you for night activities, including sleep in humans, showing its role in darkness behavior.", "start": 16.65, "end": 25.5}], "translations": ["讲座是关于褪黑素的。", "首先，它在大脑中豌豆大小的松果体内产生。", "此外，他提到这种激素有节律，与皮质醇相反。", "它在夜间达到峰值，被称为“黑暗激素”。", "总之，褪黑素在夜间产生，为你夜间的活动做准备，包括人类的睡眠，显示出它在黑暗相关行为中的作用。"], "diff": "简单", "sh": ["<span class=\"cgry\">The lecture is about </span><span class=\"cr\">melatonin</span>.\n", "<span class=\"cgry\">Firstly, </span>it is produced in <span class=\"cg\">the pineal gland</span>, <span class=\"cg\">the size of a pea</span>, in <span class=\"cg\">the brain</span>.\n", "<span class=\"cgry\">Furthermore, he mentions </span>this hormone has <span class=\"cg\">a rhythm</span> and is <span class=\"cg\">the opposite of cortisol</span>. ", "It <span class=\"cg\">peaks at night</span>, called <span class=\"cr\">the darkness hormone</span>.\n", "<span class=\"cgry\">In conclusion, </span>melatonin <span class=\"cg\">occurs at night</span> and <span class=\"cg\">prepares you for night activities</span>, including <span class=\"cg\">sleep in humans</span>, showing its role in <span class=\"cr\">darkness behavior</span>."], "memo": "【褪黑素】激素 → 【来源】脑中松果体（豌豆大小） → 【特性】有节律、与皮质醇相反、夜间达峰 → 【作用】为夜间活动做准备，人类睡觉、啮齿动物清醒", "memoImg": "memo/56.webp", "memoImgS": "memo/s/56.webp"}];
+const $ = id => document.getElementById(id);
+const audio = new Audio();
+audio.preload = 'none';
+
+/* ---------- 设置与勾选（localStorage 记忆） ---------- */
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem('sst_' + k); return v === null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem('sst_' + k, JSON.stringify(v)); }catch(e){} }
+};
+let sel = new Set(store.get('sel', ALL.filter(x => !x.coll).map(x => x.num)));
+const ARTS = ALL.filter(x => !x.coll);   // 单篇（合集不参与勾选队列）
+let cfg = Object.assign({mode:'group', groupSize:10, groupRepeats:1, loopAll:true}, store.get('cfg', {}));
+
+$('mode').value = cfg.mode; $('groupSize').value = cfg.groupSize;
+$('groupRepeats').value = cfg.groupRepeats; $('loopAll').checked = cfg.loopAll;
+function saveCfg(){
+  cfg = {mode:$('mode').value, groupSize:Math.max(1, +$('groupSize').value||10),
+         groupRepeats:Math.max(1, +$('groupRepeats').value||1), loopAll:$('loopAll').checked};
+  store.set('cfg', cfg); refreshOpts(); rebuild();
+  const sm = $('stMode'); if (sm) sm.value = cfg.mode;
+}
+$('mode').onchange = saveCfg; $('groupSize').onchange = saveCfg;
+$('groupRepeats').onchange = saveCfg; $('loopAll').onchange = saveCfg;
+function refreshOpts(){
+  $('gsWrap').style.display = cfg.mode === 'group' ? '' : 'none';
+  $('grWrap').style.display = cfg.mode === 'group' ? '' : 'none';
+}
+refreshOpts();
+function modeName(){ return {group:'分组循环(' + cfg.groupSize + '题/组)', sequence:'顺序播完', single:'单篇循环'}[cfg.mode]; }
+
+function saveSel(){ store.set('sel', [...sel]); $('selCount').textContent = ARTS.filter(x => sel.has(x.num)).length; }
+$('selAll').onclick = () => { ARTS.forEach(x => sel.add(x.num)); syncChecks(); saveSel(); };
+$('selNone').onclick = () => { ARTS.forEach(x => sel.delete(x.num)); syncChecks(); saveSel(); };
+function syncChecks(){
+  document.querySelectorAll('#list input[type=checkbox]').forEach(c => c.checked = sel.has(+c.dataset.num));
+}
+
+/* ---------- 难度标签与筛选（点标签切换三档，长按可自定义文字，localStorage 记忆） ---------- */
+const DIFFS = ['简单', '中等', '困难'];
+const diffs = store.get('diffs', {});
+function diffOf(n){
+  const it = byNum(n);
+  if (it && it.coll) return null;
+  const d = diffs[n] || (it && it.diff) || '中等';
+  return DIFFS.includes(d) ? d : String(d);
+}
+function renderTag(el, n){
+  const d = diffOf(n);
+  el.textContent = d;
+  el.className = 'tag ' + (DIFFS.includes(d) ? 'd' + DIFFS.indexOf(d) : 'dc');
+}
+let diffFilter = store.get('diffFilter', 'all');
+function rebuildChips(){
+  const vals = DIFFS.filter(d => ARTS.some(x => diffOf(x.num) === d))
+    .concat([...new Set(ARTS.map(x => diffOf(x.num)))].filter(d => d && !DIFFS.includes(d)));
+  $('fchips').innerHTML = ['all'].concat(vals).map(f =>
+    `<button class="fchip${diffFilter === f ? ' on' : ''}" data-f="${f}">${f === 'all' ? '全部' : f}</button>`).join('');
+}
+function applyFilter(){
+  rebuildChips();
+  document.querySelectorAll('#list .item, #collList .item').forEach(el => {
+    if (el.classList.contains('coll')) { el.style.display = ''; return; }
+    el.style.display = (diffFilter === 'all' || diffOf(+el.dataset.num) === diffFilter) ? '' : 'none';
+  });
+}
+$('fchips').onclick = e => {
+  const b = e.target.closest('.fchip'); if (!b) return;
+  diffFilter = b.dataset.f; store.set('diffFilter', diffFilter); applyFilter();
+};
+
+/* ---------- 队列：按模式展开播放顺序 ---------- */
+let queue = [], pos = -1, cur = null, curColl = false;
+function byNum(n){ return ALL.find(x => x.num === n); }
+function picked(){ return ALL.filter(x => !x.coll && sel.has(x.num)); }
+function buildQueue(){
+  const list = picked();
+  if (!list.length) return [];
+  if (cfg.mode === 'group'){
+    const gs = cfg.groupSize, reps = cfg.groupRepeats, q = [];
+    for (let i = 0; i < list.length; i += gs){
+      const g = list.slice(i, i + gs);
+      for (let r = 0; r < reps; r++) g.forEach(x => q.push(x.num));
+    }
+    return q;
+  }
+  return list.map(x => x.num);
+}
+function rebuild(){
+  queue = buildQueue();
+  if (cur){
+    const p = queue.indexOf(cur.num);
+    pos = p >= 0 ? p : 0;
+    updateMeta();
+  }
+  prefetchNext(); idlePrefetch();
+}
+
+/* ---------- 音频加载（blob 对象 URL，seek 不依赖服务器 Range） ---------- */
+const blobCache = new Map();
+let loadToken = 0;
+async function srcOf(it){
+  if (blobCache.has(it.num)) return blobCache.get(it.num);
+  const resp = await fetch(it.url);
+  const blob = await resp.blob();
+  const u = URL.createObjectURL(blob);
+  blobCache.set(it.num, u);
+  return u;
+}
+
+/* ---------- 预加载：把即将播放的音频提前缓存进内存（后台切歌只换内存源，不碰网络） ---------- */
+const AHEAD = 3;                       // 立即预取队列后面 3 篇
+function prefetchNext(){
+  if (!queue.length) return;
+  for (let k = 1; k <= AHEAD; k++){
+    const n = queue[(pos + k) % queue.length];
+    if (n && !blobCache.has(n) && byNum(n)) srcOf(byNum(n)).catch(()=>{});
+  }
+}
+let idleTimer = null;                  // 慢速缓存：每 10 秒缓存一篇，几分钟内全队列就绪
+function idlePrefetch(){
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => {
+    const n = queue.find(x => !blobCache.has(x) && byNum(x));
+    if (n) srcOf(byNum(n)).then(idlePrefetch).catch(()=>{});
+  }, 10000);
+}
+
+/* ---------- 预缓存：打开页面 2 秒后自动执行（无按钮，后台静默进行） ---------- */
+let preRunning = false;
+async function prefetchAll(){
+  if (preRunning) return;
+  const targets = queue.filter(n => !blobCache.has(n) && byNum(n));
+  if (!targets.length) return;
+  preRunning = true;
+  const workers = Array.from({length: Math.min(4, targets.length)}, async () => {
+    while (targets.length){
+      const n = targets.shift();
+      try { await srcOf(byNum(n)); } catch(e){}
+    }
+  });
+  await Promise.all(workers);
+  preRunning = false;
+  idlePrefetch();
+}
+
+/* ---------- 播放控制 ---------- */
+function updateMeta(){
+  $('curMeta').textContent = `第 ${(pos+1)}/${queue.length} 个 · ${modeName()}` + (audio.loop ? ' · 🔁单篇' : '');
+}
+async function load(num, autoplay){
+  const it = byNum(num); if (!it) return;
+  const token = ++loadToken;
+  cur = it;
+  curColl = !!it.coll;
+  $('curTitle').textContent = it.title;
+  $('bar').style.display = '';
+  markPlaying();
+  if (!$('studyView').style.display || $('studyView').style.display === '') renderStudy(it);
+  try {
+    const src = await srcOf(it);
+    if (token !== loadToken) return;              // 已切到别的题
+    audio.src = src;
+    updateMeta();
+    if (autoplay) audio.play().catch(()=>{});
+    $('ppBtn').textContent = '⏸';
+    prefetchNext(); idlePrefetch();
+  } catch(e){ $('curMeta').textContent = '音频加载失败：' + it.title; }
+}
+function markPlaying(){
+  document.querySelectorAll('#list .item, #collList .item').forEach(el =>
+    el.classList.toggle('playing', cur && +el.dataset.num === cur.num));
+  const el = document.querySelector('#list .item.playing, #collList .item.playing');
+  if (el && el.scrollIntoView && $('listView').style.display !== 'none')
+    el.scrollIntoView({block:'nearest', behavior:'smooth'});
+}
+function step(d){
+  if (!queue.length) return;
+  audio.loop = false; syncLoopBtn();
+  pos = (pos + d + queue.length) % queue.length;
+  load(queue[pos], true);
+}
+$('nextBtn').onclick = () => step(1);
+$('prevBtn').onclick = () => step(-1);
+$('ppBtn').onclick = () => audio.paused ? audio.play() : audio.pause();
+audio.onplay = () => { $('ppBtn').textContent = '⏸'; if (window.mediaSession) navigator.mediaSession.playbackState = 'playing'; };
+audio.onpause = () => { $('ppBtn').textContent = '▶'; if (window.mediaSession) navigator.mediaSession.playbackState = 'paused'; };
+audio.ontimeupdate = () => {
+  if (audio.duration) $('pgFill').style.width = (audio.currentTime / audio.duration * 100) + '%';
+  highlightNow();
+};
+$('pg').onclick = e => {
+  const r = e.currentTarget.getBoundingClientRect();
+  if (audio.duration) audio.currentTime = (e.clientX - r.left) / r.width * audio.duration;
+};
+audio.onended = () => {
+  if (audio.loop) return;
+  if (curColl){                            // 合集：一条长音频播完，可选从头循环
+    if (cfg.loopAll){ audio.currentTime = 0; audio.play().catch(()=>{}); }
+    return;
+  }
+  if (cfg.mode === 'single'){              // 单篇循环：本篇自动从头再放
+    audio.currentTime = 0; audio.play().catch(()=>{});
+    return;
+  }
+  if (pos + 1 < queue.length){ pos++; load(queue[pos], true); return; }
+  if (cfg.loopAll){ pos = 0; load(queue[0], true); }
+  else updateMeta();
+};
+
+/* ---------- 手机后台播放 / 锁屏控制（MediaSession） ---------- */
+if ('mediaSession' in navigator){
+  try {
+    navigator.mediaSession.setActionHandler('previoustrack', () => step(-1));
+    navigator.mediaSession.setActionHandler('nexttrack', () => step(1));
+    navigator.mediaSession.setActionHandler('play', () => audio.play());
+    navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+  } catch(e){}
+}
+function setMediaSession(it){
+  if (!('mediaSession' in navigator) || !window.MediaMetadata) return;
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: it.title, artist: 'SST 自用答案', album: 'SST Audio'
+  });
+}
+
+/* ---------- 播放模式循环切换（底栏 🔁） ---------- */
+const MODE_ORDER = ['group', 'sequence', 'single'];
+$('modeBtn').onclick = () => {
+  const next = MODE_ORDER[(MODE_ORDER.indexOf(cfg.mode) + 1) % MODE_ORDER.length];
+  cfg.mode = next; store.set('cfg', cfg);
+  $('mode').value = next; $('stMode').value = next; refreshOpts(); rebuild(); updateMeta();
+};
+/* 看词页内循环方式选择（与目录页/底栏同步） */
+$('stMode').onchange = () => {
+  cfg.mode = $('stMode').value; store.set('cfg', cfg);
+  $('mode').value = cfg.mode; refreshOpts(); rebuild(); updateMeta();
+};
+
+/* ---------- 译：逐句中文显隐（默认隐藏，记忆到本机） ---------- */
+let showzh = store.get('showzh', false);
+function applyZh(){
+  document.body.classList.toggle('showzh', showzh);
+  $('zhBtn').classList.toggle('on', showzh);
+}
+$('zhBtn').onclick = () => { showzh = !showzh; store.set('showzh', showzh); applyZh(); };
+applyZh();
+
+/* ---------- 记忆卡：中文速记 + 联想图（图片首次展开才下载，省流量） ---------- */
+const memoFmt = t => escHtml(t).replace(/【([^】]+)】/g, '<b class="k">【$1】</b>');
+function loadMemoImg(){
+  const im = $('memoCard').querySelector('img[data-src]');
+  if (im){ im.src = im.dataset.src; im.removeAttribute('data-src'); }
+}
+$('memoBtn').onclick = () => {
+  const on = $('memoCard').classList.toggle('on');
+  $('memoBtn').classList.toggle('on', on);
+  if (on){ loadMemoImg(); if ($('memoCard').scrollIntoView) $('memoCard').scrollIntoView({block:'nearest', behavior:'smooth'}); }
+};
+
+/* ---------- 看词视图（SPA 内切换，不打断播放） ---------- */
+let studyNum = null;
+const escHtml = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function renderStudy(it){
+  studyNum = it.num;
+  $('stTitle').textContent = it.title;
+  const stT = $('stTag');
+  stT.style.display = it.coll ? 'none' : '';
+  stT.dataset.num = it.num;
+  renderTag(stT, it.num);
+  $('stMeta').textContent = (it.coll ? '合集连播 · ' : 'SST 自用答案 · ')
+    + `${it.sentences.length} 句 · 约 ${it.dur.toFixed(0)} 秒`;
+  let prevArt = null;
+  $('sentList').innerHTML = it.sentences.map(s => {
+    let head = '';
+    if (s.art && s.art !== prevArt){
+      prevArt = s.art;
+      head = `<div class="sdiv">📌 ${it.titles && it.titles[s.art] ? it.titles[s.art] : '#' + s.art}</div>`;
+    }
+    const body = s.art
+      ? (it.shmap && it.shmap[s.art] && it.shmap[s.art][s.si] ? it.shmap[s.art][s.si] : escHtml(s.sentence))
+      : (it.sh && it.sh[s.i] ? it.sh[s.i] : escHtml(s.sentence));
+    const zh = it.translations && it.translations[s.i] ? `<div class="zh">${it.translations[s.i]}</div>` : '';
+    return `<div class="sent" data-i="${s.i}">${head}<span class="no">${s.i+1}</span>${body}${zh}</div>`;
+  }).join('');
+  /* 记忆卡：速记 + 联想图（无内容则隐藏按钮） */
+  const mc = $('memoCard');
+  const mHtml = it.memo ? `<div class="memo-callout"><b class="h">💡 中文速记</b>${memoFmt(it.memo)}</div>` : '';
+  const mImg = it.memoImg ? `<div class="memo-img"><a href="${it.memoImg}" target="_blank" rel="noopener"><img data-src="${it.memoImgS||it.memoImg}" alt="记忆联想图"></a></div>` : '';
+  if (mHtml || mImg){
+    mc.innerHTML = mHtml + mImg;
+    $('memoBtn').style.display = '';
+    if (mc.classList.contains('on')) loadMemoImg();
+  } else {
+    mc.innerHTML = ''; mc.classList.remove('on');
+    $('memoBtn').classList.remove('on');
+    $('memoBtn').style.display = 'none';
+  }
+  syncLoopBtn();
+}
+function showStudy(it){
+  if (it) renderStudy(it);
+  else if (cur) renderStudy(cur);
+  $('listView').style.display = 'none';
+  $('studyView').style.display = '';
+  window.scrollTo(0, 0);
+  highlightNow(true);
+}
+function showList(){
+  $('studyView').style.display = 'none';
+  $('listView').style.display = '';
+  markPlaying();
+}
+$('backList').onclick = showList;
+$('studyBtn').onclick = () => {
+  if ($('studyView').style.display !== 'none'){ showList(); return; }
+  if (!cur){ alert('先选一题开始播放'); return; }
+  showStudy(cur);
+};
+$('list').addEventListener('click', e => {
+  const item = e.target.closest('.item'); if (!item) return;
+  const num = +item.dataset.num;
+  if (e.target.tagName === 'INPUT') return;
+  const tag = e.target.closest('.tag');
+  if (tag){
+    cycleTag(tag);
+    return;
+  }
+  if (e.target.closest('.studyBtn2')){
+    e.preventDefault();
+    if (!queue.includes(num)) queue = buildQueue();
+    if (!queue.includes(num)){ alert('该题未勾选，请先勾选'); return; }
+    if (!cur || cur.num !== num){ pos = queue.indexOf(num); load(num, false); }
+    showStudy(byNum(num));
+    return;
+  }
+  if (e.target.closest('.pbtn') || e.target.closest('.info')){
+    queue = buildQueue();
+    if (!queue.includes(num)){ alert('该题未勾选，请先勾选'); return; }
+    pos = queue.indexOf(num);
+    load(num, true);
+  }
+});
+$('list').addEventListener('change', e => {
+  const c = e.target; if (c.type !== 'checkbox') return;
+  const num = +c.dataset.num;
+  c.checked ? sel.add(num) : sel.delete(num);
+  saveSel(); rebuild();
+});
+
+/* ---------- 合集：一条长 MP3 整段连播（后台不被切歌打断） ---------- */
+$('collList').addEventListener('click', e => {
+  const item = e.target.closest('.item'); if (!item) return;
+  const num = +item.dataset.num;
+  const wantStudy = !!e.target.closest('.studyBtn2');
+  load(num, !wantStudy);
+  if (wantStudy) showStudy(byNum(num));
+});
+
+/* ---------- 长按难度标签 → 自定义文字 ---------- */
+function syncListTag(n, except){
+  const lt = document.querySelector('#list .item[data-num="'+n+'"] .tag');
+  if (lt && lt !== except) renderTag(lt, n);
+}
+function cycleTag(el){
+  const n = +el.dataset.num; if (!n) return;
+  diffs[n] = DIFFS[(DIFFS.indexOf(diffOf(n)) + 1) % DIFFS.length];
+  store.set('diffs', diffs);
+  renderTag(el, n); syncListTag(n, el); applyFilter();
+}
+function customTag(el){
+  const n = +el.dataset.num;
+  const curD = diffOf(n) || '';
+  const v = prompt('自定义难度标签（最长 6 字，留空恢复三档默认）', DIFFS.includes(curD) ? '' : curD);
+  if (v === null) return;
+  const val = v.trim().slice(0, 6);
+  if (val) diffs[n] = val; else delete diffs[n];
+  store.set('diffs', diffs);
+  renderTag(el, n); syncListTag(n, el); applyFilter();
+}
+function bindTagLongPress(el){
+  let timer = null, longFired = false;
+  el.addEventListener('pointerdown', () => {
+    longFired = false;
+    timer = setTimeout(() => { longFired = true; customTag(el); }, 500);
+  });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev =>
+    el.addEventListener(ev, () => { if (timer){ clearTimeout(timer); timer = null; } }));
+  el.addEventListener('click', e => { if (longFired) e.stopImmediatePropagation(); }, true);
+}
+
+/* ---------- 看词页内控制：点句跳转 / 循环 / 变速 ---------- */
+$('sentList').addEventListener('click', e => {
+  const el = e.target.closest('.sent'); if (!el || !cur) return;
+  const s = cur.sentences[+el.dataset.i];
+  if (s){ audio.currentTime = s.start; audio.play(); }
+});
+$('loopBtn').onclick = () => {
+  audio.loop = !audio.loop; syncLoopBtn(); updateMeta();
+};
+function syncLoopBtn(){
+  $('loopBtn').textContent = '🔁 本篇反复：' + (audio.loop ? '开' : '关');
+  $('loopBtn').classList.toggle('on', audio.loop);
+}
+$('speeds').onclick = e => {
+  const b = e.target.closest('button'); if (!b) return;
+  audio.playbackRate = parseFloat(b.dataset.s);
+  [...e.currentTarget.children].forEach(x => x.classList.toggle('on', x === b));
+};
+function highlightNow(force){
+  if ($('studyView').style.display === 'none' || !cur) return;
+  const t = audio.currentTime;
+  let idx = -1;
+  for (let i = 0; i < cur.sentences.length; i++) if (t >= cur.sentences[i].start - 0.05) idx = i;
+  document.querySelectorAll('#sentList .sent').forEach(el => {
+    const on = +el.dataset.i === idx;
+    el.classList.toggle('active', on);
+    if (on && (force || el.getAttribute('data-was') !== '1') && el.scrollIntoView)
+      el.scrollIntoView({block:'nearest', behavior:'smooth'});
+    el.setAttribute('data-was', on ? '1' : '0');
+  });
+}
+
+/* ---------- 连播已选 ---------- */
+$('playSel').onclick = () => {
+  queue = buildQueue();
+  if (!queue.length){ alert('请先勾选要听的题'); return; }
+  pos = 0; load(queue[0], true);
+};
+
+/* ---------- 初始化 ---------- */
+(function init(){
+  syncChecks(); saveSel(); refreshOpts();
+  document.querySelectorAll('#list .tag').forEach(el => {
+    renderTag(el, +el.dataset.num);
+    bindTagLongPress(el);
+  });
+  bindTagLongPress($('stTag'));
+  $('stTag').onclick = () => cycleTag($('stTag'));
+  applyFilter();
+  $('stMode').value = cfg.mode;
+  setTimeout(prefetchAll, 2000);   // 自动预缓存：打开页面后 2 秒开始
+})();
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').then(() => {
+  /* SW 换代接管当前页时自动刷新一次（主屏模式无需手动杀进程拿新版） */
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!window.__swReloaded){ window.__swReloaded = 1; location.reload(); }
+  });
+});
+window.__player = { audio, buildQueue, cfg: () => cfg,
+  get queue(){ return queue; }, get pos(){ return pos; }, set pos(v){ pos = v; },
+  get blobCache(){ return blobCache; },
+  load, showStudy, showList, prefetchAll, get cur(){ return cur; } };
+</script>
+</body>
+</html>

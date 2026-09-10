@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>44. A Luxury Brand 奢侈品 · SST 自用答案音频</title>
+<link rel="manifest" href="../manifest.webmanifest">
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1f2329;--sub:#646a73;--brand:#245bdb;--line:#e5e6eb;--hl:#e8f0ff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+.wrap{max-width:720px;margin:0 auto;padding:20px 16px 48px}
+.top{display:flex;align-items:center;gap:8px;margin-bottom:16px;font-size:14px}
+.top a{color:var(--brand);text-decoration:none}
+h1{font-size:20px;line-height:1.4;margin-bottom:4px}
+.meta{color:var(--sub);font-size:13px;margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+.controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px}
+button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 14px;font-size:14px;cursor:pointer;color:var(--ink)}
+button:hover{border-color:var(--brand);color:var(--brand)}
+button.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.speeds{display:flex;gap:6px}
+.speeds button.on{background:#e8f0ff;border-color:#c3d4f7;color:var(--brand)}
+audio{width:100%;margin-top:4px}
+.sent{padding:10px 12px;border-radius:8px;cursor:pointer;line-height:1.7;font-size:15px;transition:background .15s}
+.sent:hover{background:#f2f3f5}
+.sent.active{background:var(--hl);box-shadow:inset 3px 0 0 var(--brand)}
+.sent .no{color:var(--sub);font-size:12px;margin-right:8px}
+.sent .zh{color:#8f959e;font-size:12px;margin-top:2px;line-height:1.5;display:none}
+body.showzh .sent .zh{display:block}
+.cr{color:rgb(216,57,49)}
+.cg{color:rgb(46,161,33)}
+.cgry{color:rgb(143,149,158)}
+.dl{display:inline-block;margin-top:4px;color:var(--brand);text-decoration:none;font-size:14px}
+.memocard{display:none;margin-bottom:16px}
+.memocard.on{display:block}
+.memo-callout{background:rgb(255,245,235);border:1px solid rgb(255,186,107);border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.8;color:#1f2329}
+.memo-callout .h{display:block;font-weight:700;color:#d87c1a;margin-bottom:6px}
+.memo-callout .k{font-weight:700;color:#d87c1a}
+.memo-img{margin-top:12px}
+.memo-img a{display:block}
+.memo-img img{width:100%;border-radius:10px;border:1px solid var(--line);display:block}
+.tip{color:var(--sub);font-size:12px;margin-top:10px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a href="../index.html">← 目录</a></div>
+  <h1>44. A Luxury Brand 奢侈品</h1>
+  <div class="meta">SST 自用答案 · 5 句 · 全文约 24 秒 · 语音 en-US-MichelleNeural</div>
+
+  <div class="card">
+    <audio id="player" src="../audio/44.%20A%20Luxury%20Brand%20%E5%A5%A2%E4%BE%88%E5%93%81.mp3" preload="auto" controls></audio>
+    <div class="controls">
+      <button id="loopBtn">🔁 循环：关</button>
+      <div class="speeds" id="speeds">
+        <button data-s="0.75">0.75x</button>
+        <button data-s="1" class="on">1x</button>
+        <button data-s="1.25">1.25x</button>
+      </div>
+      <button id="zhBtn" title="显示/隐藏逐句中文">译</button>
+      <button id="memoBtn" title="记忆联想图 + 中文速记">🧠 记忆卡</button>
+      <a class="dl" href="../audio/44.%20A%20Luxury%20Brand%20%E5%A5%A2%E4%BE%88%E5%93%81.mp3" download="44. A Luxury Brand 奢侈品.mp3">⬇ 下载 MP3</a>
+    </div>
+  </div>
+
+  <div class="card memocard" id="memoCard">
+    <div class="memo-callout"><b class="h">💡 中文速记</b>【奢侈品】定义与区分 → 【商业标准】稀缺且昂贵、现实未必 → 【例子】澳洲两台电视、中国星巴克 → 【答案】因人而异</div>
+    <div class="memo-img"><a href="../memo/44.webp" target="_blank" rel="noopener"><img data-src="../memo/s/44.webp" alt="记忆联想图"></a></div>
+  </div>
+
+  <div class="card" id="sentList">
+    <div class="sent" data-i="0"><span class="no">1</span><span class="cgry">The lecture is about </span><span class="cr">what makes a luxury brand</span> and <span class="cg">how we distinguish it</span>.
+<div class="zh">讲座是关于什么造就了奢侈品牌，以及我们如何区分它。</div></div>
+<div class="sent" data-i="1"><span class="no">2</span><span class="cgry">The speaker first provides information on </span><span class="cg">the standard business response</span>. <div class="zh">讲者首先谈到标准的商业回答。</div></div>
+<div class="sent" data-i="2"><span class="no">3</span>Luxury brands are <span class="cg">exclusive</span> and <span class="cg">expensive</span>, but not always <span class="cg">in reality</span>.
+<div class="zh">奢侈品牌具有排他性且昂贵，但现实并不总是如此。</div></div>
+<div class="sent" data-i="3"><span class="no">4</span><span class="cgry">Furthermore, he mentions </span>luxury examples such as two televisions in Australia and Starbucks in China.
+<div class="zh">此外，他提到奢侈品案例，如澳大利亚的两台电视机和中国的星巴克。</div></div>
+<div class="sent" data-i="4"><span class="no">5</span><span class="cgry">In conclusion, </span><span class="cg">the real answer depends on whom you talk to</span>.<div class="zh">总之，真正的答案取决于你和谁交谈。</div></div>
+  </div>
+  <p class="tip">点击任意句子可跳转到对应音频位置；播放时当前句自动高亮并跟随滚动。<b>译</b> 显示逐句中文（默认隐藏），<b>🧠 记忆卡</b> 查看中文速记与联想图。手机首次联网打开本页后即可离线使用（添加到主屏幕效果更佳）。</p>
+</div>
+<script>
+const SENTS = [{"i": 0, "sentence": "The lecture is about what makes a luxury brand and how we distinguish it.", "start": 0.1, "end": 4.25}, {"i": 1, "sentence": "The speaker first provides information on the standard business response.", "start": 4.2, "end": 8.588}, {"i": 2, "sentence": "Luxury brands are exclusive and expensive, but not always in reality.", "start": 8.588, "end": 13.575}, {"i": 3, "sentence": "Furthermore, he mentions luxury examples such as two televisions in Australia and Starbucks in China.", "start": 13.575, "end": 19.975}, {"i": 4, "sentence": "In conclusion, the real answer depends on whom you talk to.", "start": 19.975, "end": 23.95}];
+const audio = document.getElementById('player');
+const loopBtn = document.getElementById('loopBtn');
+const list = document.getElementById('sentList');
+let cur = -1;
+
+/* ---- 译：逐句中文显隐（默认隐藏，记忆到本机） ---- */
+const zhBtn = document.getElementById('zhBtn');
+let showzh = false;
+try { showzh = localStorage.getItem('sst_showzh') === '1'; } catch (e){}
+function applyZh(){
+  document.body.classList.toggle('showzh', showzh);
+  zhBtn.classList.toggle('on', showzh);
+}
+zhBtn.onclick = () => {
+  showzh = !showzh;
+  try { localStorage.setItem('sst_showzh', showzh ? '1' : '0'); } catch (e){}
+  applyZh();
+};
+applyZh();
+
+/* ---- 记忆卡：中文速记 + 联想图（图片首次打开才加载，省流量） ---- */
+const memoBtn = document.getElementById('memoBtn');
+const memoCard = document.getElementById('memoCard');
+function loadMemoImg(){
+  const im = memoCard.querySelector('img[data-src]');
+  if (im){ im.src = im.dataset.src; im.removeAttribute('data-src'); }
+}
+memoBtn.onclick = () => {
+  const on = memoCard.classList.toggle('on');
+  memoBtn.classList.toggle('on', on);
+  if (on){ loadMemoImg(); if (memoCard.scrollIntoView) memoCard.scrollIntoView({block:'nearest', behavior:'smooth'}); }
+};
+
+loopBtn.onclick = () => {
+  audio.loop = !audio.loop;
+  loopBtn.textContent = '🔁 循环：' + (audio.loop ? '开' : '关');
+  loopBtn.classList.toggle('on', audio.loop);
+};
+document.getElementById('speeds').onclick = e => {
+  const b = e.target.closest('button'); if (!b) return;
+  audio.playbackRate = parseFloat(b.dataset.s);
+  [...e.currentTarget.children].forEach(x => x.classList.toggle('on', x === b));
+};
+function setActive(i){
+  if (i === cur) return;
+  cur = i;
+  list.querySelectorAll('.sent').forEach((el, k) => {
+    el.classList.toggle('active', k === i);
+    if (k === i && el.scrollIntoView) el.scrollIntoView({block:'nearest', behavior:'smooth'});
+  });
+}
+list.onclick = e => {
+  const el = e.target.closest('.sent'); if (!el) return;
+  audio.currentTime = SENTS[+el.dataset.i].start;
+  audio.play();
+};
+audio.ontimeupdate = () => {
+  const t = audio.currentTime;
+  let idx = -1;
+  for (let i = 0; i < SENTS.length; i++) if (t >= SENTS[i].start - 0.05) idx = i;
+  setActive(idx);
+};
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('../sw.js').then(() => {
+  /* SW 换代接管当前页时自动刷新一次（主屏模式无需手动杀进程拿新版） */
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!window.__swReloaded){ window.__swReloaded = 1; location.reload(); }
+  });
+});
+</script>
+</body>
+</html>

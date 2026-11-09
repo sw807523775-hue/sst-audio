@@ -1,4 +1,4 @@
-const CACHE = 'sst-audio-v24';
+const CACHE = 'sst-audio-v25';
 /* 安装阶段只预缓存骨架 + 轻量子页（合计约 0.7MB）；音频不在预缓存列表里，
    由 SW 运行时缓存与 SPA 后台渐进预取负责，避免首次打开就下载数十 MB 拖慢手机。 */
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg',

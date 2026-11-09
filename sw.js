@@ -1,4 +1,4 @@
-const CACHE = 'sst-audio-v23';
+const CACHE = 'sst-audio-v24';
 /* 安装阶段只预缓存骨架 + 轻量子页（合计约 0.7MB）；音频不在预缓存列表里，
    由 SW 运行时缓存与 SPA 后台渐进预取负责，避免首次打开就下载数十 MB 拖慢手机。 */
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg',
@@ -72,9 +72,10 @@ self.addEventListener('activate', e => {
     ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
 self.addEventListener('fetch', e => {
+  if (e.request.headers.has('Range')) return;
   e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).then(resp => {
     const copy = resp.clone();
-    caches.open(CACHE).then(c => c.put(e.request, copy));
+    if (resp.ok) caches.open(CACHE).then(c => c.put(e.request, copy));
     return resp;
-  }).catch(() => caches.match('./index.html'))));
+  }).catch(() => e.request.mode === 'navigate' ? caches.match('./index.html') : Response.error())));
 });
